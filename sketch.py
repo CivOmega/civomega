@@ -1,6 +1,9 @@
 import json
 import re
 
+from dataomega.match import Match
+from dataomega.parser import Parser
+
 # from dataomega import site
 
 # ## "Database"
@@ -24,37 +27,7 @@ AWESOME_DATABASE = {
 }
 
 
-# think of it like x
-class Matcher(object):
-    def __init__(self):
-        # do some setup
-        pass
-
-    def search(self, s):
-        # do some sort of matching and return a Match or None
-        pass
-
-
-# located in dataomega.matches
-class Match(object):
-    def __init__(self, search, data):
-        self.search = search
-        self.data = data
-        self.extract()  # TODO: make lazy
-
-    @property
-    def certainty(self):
-        # come up with a way to say
-        pass
-
-    def as_html(self):
-        pass
-
-    def as_json(self):
-        pass
-
-
-class MoneyRaisedMatcher(Matcher):
+class MoneyRaisedParser(Parser):
     def __init__(self):
         pattern = r'How much money has (?P<filer>([A-Z][a-z]*\s?)+) raised'
         self.matcher = re.compile(pattern)
@@ -74,7 +47,7 @@ class MoneyRaisedMatch(Match):
         return json.dumps({"raised": self.money})
 
 
-class ContributorMatcher(Matcher):
+class ContributorParser(Parser):
     def __init__(self):
         pattern = r'Who (gave|gives) money to (?P<filer>([A-Z][a-z]*\s?)+)+'
         self.matcher = re.compile(pattern)
@@ -100,7 +73,7 @@ class ContributorsListMatch(Match):
         return json.dumps(self.contributors)
 
 
-# site.register(ContributorMatcher)
+# site.register(ContributorParser)
 
 
 #############
@@ -109,7 +82,7 @@ class ContributorsListMatch(Match):
 # matches = dataomega.search("Who gave money to Rick Perry")
 #
 # for now
-matcher = ContributorMatcher()
+matcher = ContributorParser()
 print matcher.search("Who gave money to Rick Perry").as_json()
 print matcher.search("Who gave money to David Dewhurst").as_json()
 
@@ -117,7 +90,7 @@ print matcher.search("Who gave money to David Dewhurst").as_json()
 
 # or
 # matches = dataomega.search("How much money has Rick Perry raised")
-matcher = MoneyRaisedMatcher()
+matcher = MoneyRaisedParser()
 print matcher.search("How much money has Rick Perry raised").as_json()
 print matcher.search("How much money has David Dewhurst raised").as_json()
 #
