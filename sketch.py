@@ -1,6 +1,27 @@
+import json
 import re
 
-from dataomega import site
+# from dataomega import site
+
+# ## "Database"
+#
+# This is a very simple "database" that can be used for testing purposes
+AWESOME_DATABASE = {
+    "Rick Perry": {
+        "contributors": [
+            "Texans for Perry",
+            "Texans who are really for Perry",
+        ],
+        "money": "Bazillion",
+    },
+    "David Dewhurst": {
+        "contributors": [
+            "Texans for Dewhurst",
+            "Texans who are really for Dewhurst",
+        ],
+        "money": "Gajillion",
+    }
+}
 
 
 # think of it like x
@@ -30,7 +51,27 @@ class Match(object):
         pass
 
     def as_json(self):
-        return json.dumps(self.data)
+        pass
+
+
+class MoneyRaisedMatcher(Matcher):
+    def __init__(self):
+        pattern = r'How much money has (?P<filer>([A-Z][a-z]*\s?)+) raised'
+        self.matcher = re.compile(pattern)
+
+    def search(self, s):
+        match = self.matcher.search(s)
+        if match is None:
+            return None
+        return MoneyRaisedMatch(s, match.groupdict())
+
+
+class MoneyRaisedMatch(Match):
+    def extract(self):
+        self.money = AWESOME_DATABASE[self.data['filer']]['money']
+
+    def as_json(self):
+        return json.dumps({"raised": self.money})
 
 
 class ContributorMatcher(Matcher):
@@ -47,23 +88,36 @@ class ContributorMatcher(Matcher):
 
 class ContributorsListMatch(Match):
     def extract(self):
-        filer = Filer.objects.get(name=self.data['filer'])
-        self.contributors = Contributors.objects.filter(filer=filer)
+        self.contributors = AWESOME_DATABASE[self.data['filer']]['contributors']
+
+    def as_html(self):
+        r = "<ul>"
+        for contributor in self.contributors:
+            r += "<li>%s</li>" % contributor
+        return r
+
+    def as_json(self):
+        return json.dumps(self.contributors)
 
 
-site.register(ContributorMatcher)
+# site.register(ContributorMatcher)
 
 
 #############
-import dataomega
-matches = dataomega.search("Who gave money to Rick Perry")
-best_match = matches[0]
-best_match.contributors
+# Eventually --
+# import dataomega
+# matches = dataomega.search("Who gave money to Rick Perry")
+#
+# for now
+matcher = ContributorMatcher()
+print matcher.search("Who gave money to Rick Perry").as_json()
+print matcher.search("Who gave money to David Dewhurst").as_json()
 
 
 
 # or
-matches = dataomega.search("How much money has Rick Perry raised")
-
-for match in matches:
-    #
+# matches = dataomega.search("How much money has Rick Perry raised")
+matcher = MoneyRaisedMatcher()
+print matcher.search("How much money has Rick Perry raised").as_json()
+print matcher.search("How much money has David Dewhurst raised").as_json()
+#
