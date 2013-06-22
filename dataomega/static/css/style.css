@@ -1,4 +1,50 @@
+* {
+	-webkit-transition: all 0.2s ease;
+  	   -moz-transition: all 0.2s ease;
+  		-ms-transition: all 0.2s ease;
+  		 -o-transition: all 0.2s ease;
+  			transition: all 0.2s ease;
+}
 
 body {
-    background-color: pink;
+	background-color: #fff;
+	font-family: "Gotham";
+}
+
+.container {
+	text-align: center;
+}
+
+.form-search input {
+	height: 1.8em;
+}
+
+.form-search input:focus {
+	border-color: #ccc;
+	box-shadow: none;
+}
+
+.form-search button {
+	background-image: none;
+	background-color: #e74c3c;
+	color: #fff;
+	font-weight: bold;
+	text-shadow: none;
+	border: 0;
+	border-bottom: 1px solid #a82215;
+	text-transform: uppercase;
+	font-family: "Gotham";
+	height: 2.5em;
+}
+
+.form-search button:hover {
+	background-color: #d62c1a;
+	color: #fff;
+}
+
+.form-search button:active {
+	background-color: #d62c1a;
+	color: #fff;
+	border-bottom: 0;
+	border-top: 1px solid #a82215;
 }
