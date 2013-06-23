@@ -73,8 +73,6 @@ p {
 }
 
 .result table {
-	width: 100%;
-	text-align: left;
 }
 .result table td {
 	padding: 4px;
@@ -83,11 +81,13 @@ p {
 #question-form {
 	position: relative;
 }
+
 #spinner {
 	position: absolute;
 	top: 9px;
 	display: none;
 }
+
 @media (max-width: 767px) {
 	#spinner {
 		right: 10px;
