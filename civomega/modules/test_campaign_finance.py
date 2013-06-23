@@ -66,7 +66,6 @@ class ContributorParser(Parser):
         return ContributorsListMatch(s, match.groupdict())
 
 
-
 class ContributorsListMatch(Match):
     def __init__(self, *args, **kwargs):
         self.contributors = False

@@ -2,15 +2,15 @@
 <style>
   table.population-table tr td { text-align: left; }
 </style>
-<p>Population {% if label %}of <i>{{ label }}</i>
-   origin {% endif %}in <i>{{ place.name }}</i>:<br>
-   <b>{{ '{:,.0f}'.format(population) }}</b>
-</p>
+<p><b style="font-size:36px">{{ '{:,.0f}'.format(population) }}</b><br>
+   Population {% if label %}of <em>{{ label }}</em>
+   origin {% endif %}in <em>{{ place.name }}</em>.</p>
+
 <h3>Population of <i>{{ place.name }}</i> by specific hispanic origin</h3>
 <table class="population-table">
-  <th>
-    <td>Origin</td><td>Population</td>
-  </th>
+  <tr>
+    <th>Origin</th><th>Population</th>
+  </tr>
   <tr><td>Total:</td><td>{{ '{:,.0f}'.format(full_data['b03001001']) }}</td></tr>
   <tr><td>{{ indent(1) }}Not Hispanic or Latino</td><td>{{ '{:,.0f}'.format(full_data['b03001002']) }}</td></tr>
   <tr><td>{{ indent(1) }}Hispanic or Latino</td><td>{{ '{:,.0f}'.format(full_data['b03001003']) }}</td></tr>
@@ -44,4 +44,4 @@
   <tr><td>{{ indent(2) }}All other Hispanic or Latino</td><td>{{ '{:,.0f}'.format(full_data['b03001031']) }}</td></tr>
 </table>
 <p><em>Source: American Community Survey 2007-2011, table B03001</em></p>
-<p><em>Data provided by the <a href="http://beta.censusreporter.org">Census Reporter</a></em></p>
+<p><em>Data provided by the <a href="http://www.census.gov/">United States Census Bureau</a> and <a href="http://censusreporter.org/">CensusReporter</a>.</em></p>
