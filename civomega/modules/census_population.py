@@ -80,13 +80,14 @@ class SimpleCensusParser(Parser):
             places = find_places(d['place'])
             if places:
             # figure out which table for noun
-                noun = d['noun'].strip()
-                if noun.lower().startswith('dominican'):
-                    return HispanicOriginMatch("b03001007", places)
-                elif noun.lower().startswith('chile'):
-                    return HispanicOriginMatch("b03001019", places)
-                elif noun.lower().startswith('chinese'):
-                    return AsianOriginMatch("b02006005", places)
+                noun = d['noun'].strip().lower()
+                if noun[-1] == 's': noun = noun[:-1]
+                for field,name in SPECIFIC_HISPANIC_ORIGIN.items():
+                    if name.lower().startswith(noun):
+                        return HispanicOriginMatch(field, places)
+                for field,name in SPECIFIC_ASIAN_ORIGIN.items():
+                    if name.lower().startswith(noun):
+                        return AsianOriginMatch(field, places)
         return None
 
 
