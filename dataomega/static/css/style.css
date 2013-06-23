@@ -7,24 +7,29 @@
 }
 
 body {
-	background-color: #fff;
-	font-family: "Gotham";
+	background-color: #eee;
+	font-family: "Lato";
+}
+
+h1 {
+	font-weight: bolder;
 }
 
 .container {
 	text-align: center;
 }
 
-.form-search input {
+.form-search .input {
 	height: 1.8em;
+	font-family: "Lato";
 }
 
-.form-search input:focus {
+.form-search .input:focus {
 	border-color: #ccc;
 	box-shadow: none;
 }
 
-.form-search button {
+.form-search .btn {
 	background-image: none;
 	background-color: #e74c3c;
 	color: #fff;
@@ -33,16 +38,16 @@ body {
 	border: 0;
 	border-bottom: 1px solid #a82215;
 	text-transform: uppercase;
-	font-family: "Gotham";
+	font-family: "Lato";
 	height: 2.5em;
 }
 
-.form-search button:hover {
+.form-search .btn:hover {
 	background-color: #d62c1a;
 	color: #fff;
 }
 
-.form-search button:active {
+.form-search .btn:active {
 	background-color: #d62c1a;
 	color: #fff;
 	border-bottom: 0;

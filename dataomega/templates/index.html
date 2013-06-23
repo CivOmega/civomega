@@ -1,13 +1,11 @@
 {%extends "layout.html" %}
 
 {% block content %}
-  Here goes the query bar.
-
   <div class="row">
     <div class="span12">
       <form class="form-search" action="{{url_for('ask')}}" method='GET'>
-        <input type="text" class="span10 input-xxlarge" name="question" placeholder="Why are there lobbyists in my bedroom?">
-        <input type="submit" class="span1 btn btn-primary" value="Ask">
+        <input type="text" class="span10 input input-xxlarge" name="question" placeholder="Why are there lobbyists in my bedroom?">
+        <input type="submit" class="span2 btn btn-primary" value="Ask!">
       </form>
     </div>
   </div>
