@@ -69,13 +69,10 @@ p {
 	border: 1px solid #D7C9AC;
 	background: #F6EAD2;
 	margin: 10px; 
-	padding: 10px;
+	padding: 10px 20px;
+	border-radius: 3px;
 }
 
 .result table {
-	width: 100%;
-	text-align: left;
-}
-.result table td {
-	padding: 4px;
+	display: none;
 }
