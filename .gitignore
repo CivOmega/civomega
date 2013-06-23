@@ -40,3 +40,4 @@ venv
 *.swp
 include
 .DS_Store
+man/
