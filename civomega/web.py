@@ -3,8 +3,8 @@ import logging
 from flask import render_template, request
 from werkzeug.exceptions import NotFound
 
-from dataomega.core import app
-from dataomega.registry import REGISTRY
+from civomega.core import app
+from civomega.registry import REGISTRY
 
 log = logging.getLogger(__name__)
 

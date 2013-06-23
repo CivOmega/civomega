@@ -7,7 +7,7 @@ install:
 	python setup.py develop
 
 run:
-	python dataomega/web.py
+	gunicorn civomega.web:app
 
 test:
 	nosetests

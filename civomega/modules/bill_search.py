@@ -1,16 +1,15 @@
-from dataomega import Parser, Match
+from civomega import Parser, Match
 from jinja2 import Environment, PackageLoader
-from dataomega.registry import REGISTRY
+from civomega.registry import REGISTRY
 
-env = Environment(loader=PackageLoader('dataomega', 'templates'))
+env = Environment(loader=PackageLoader('civomega', 'templates'))
 
 import os
 import re
 import json
 import requests
 
-SIMPLE_PATTERN = re.compile('^\s*(?:what|which)\sbill(s?)\s(?:is|was|are|were)\sabout\s(?P<noun>.+)',re.IGNORECASE)
-
+SIMPLE_PATTERN = re.compile('^\s*(?:what|which)\s(?:legislative\s)?(?:laws|legislation|bill(s?))\s(?:is|was|are|were)\sabout\s(?P<noun>.+)',re.IGNORECASE)
 
 class SimpleBillSearchParser(Parser):
     def search(self, s):
@@ -33,10 +32,10 @@ class SimpleBillSearchMatch(Match):
         url = 'http://congress.api.sunlightfoundation.com/bills?apikey=%s&query=%s' % (os.environ['SUNLIGHT_API_KEY'], noun)
         resp = requests.get(url)
         self.data = resp.json()
-        
+
     def as_json(self):
         return json.dumps(self.data)
-        
+
     def as_html(self):
         template = env.get_template('bill_search/simple_search.html')
         return template.render(**self.data)

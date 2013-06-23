@@ -1,10 +1,10 @@
 import json
 import re
 
-from dataomega.match import Match
-from dataomega.parser import Parser
+from civomega.match import Match
+from civomega.parser import Parser
 
-from dataomega.registry import REGISTRY
+from civomega.registry import REGISTRY
 
 
 # dumb example, flat database of campaign contributions in one year

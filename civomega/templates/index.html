@@ -1,0 +1,48 @@
+{%extends "layout.html" %}
+
+
+{% block scripts %}
+  <script type="text/javascript">
+    $(function() {
+      $("#question-form").submit(function() {
+        $("#spinner").show();
+        $("#results").load(
+          "{{url_for('ask')}}",
+          $("#question-form").serialize(),
+          function() {
+            $("#spinner").hide();
+          }
+        )
+        return false;
+      });
+      $(".example-question").click(function() {
+        $("#question").val($(this).text());
+        $("#question-form").submit();
+        return false;
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="span12" style="margin-bottom:0">
+      <form id="question-form" class="form-search" action="{{url_for('ask')}}" method='GET'>
+        <img src="/static/img/ajax_wait_16.gif" id="spinner"/>
+        <input id="question" type="text" class="span10 input input-xxlarge" name="question" placeholder="Why are there lobbyists in my bedroom?">
+        <input id="ask" type="submit" class="span2 btn btn-primary" value="Ask!">
+      </form>
+    </div>
+    <div class="span12">
+        <p style="margin-top:0">Try these:
+            "<a href="#" class="example-question">Who gives money to Rick Perry?</a>",
+            "<a href="#" class="example-question">What legislative bills are about abortion?</a>",
+            "<a href="#" class="example-question">How many Dominicans live in New York City?</a>"
+        </p>
+    </div>
+    <div class="span12">
+      <div id="results"></div>
+    </div>
+  </div>
+{% endblock %}
+
