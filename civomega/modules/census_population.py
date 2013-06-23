@@ -69,9 +69,13 @@ SPECIFIC_ASIAN_ORIGIN = { # table id = B02006
     'b02006017': 'Vietnamese',
     'b02006018': 'Other Asian',
     'b02006019': 'Other Asian, not specified',
-
 }
 
+RACE_PATTERNS = [ # pattern, field, label
+    (re.compile('black( people)?|(african|afro)[-\s]?american|african american|negro.*'), 'b02001003', 'Black or African American alone'),
+    (re.compile('white( people|s)?'), 'b02001002', 'White alone'),
+    (re.compile('asian( people|s)?'), 'b02001005', 'Asian alone'),
+]
 
 MAX_RESULTS = 5
 
@@ -92,11 +96,16 @@ class SimpleCensusParser(Parser):
                             if len(results) >= MAX_RESULTS: break
                             results.append(HispanicOriginMatch(field, place))
                 for field,name in SPECIFIC_ASIAN_ORIGIN.items():
-                    if name.lower().startswith(noun):
+                    if (name.lower().startswith(noun)) and not (field == 'b02006002' and re.match('asians?',noun)):
                         #results.append(AsianOriginMatch(field, places[0]))
                         for place in places:
                             if len(results) >= MAX_RESULTS: break
                             results.append(AsianOriginMatch(field, place))
+                for pat, field, label in RACE_PATTERNS:
+                    if pat.match(noun):
+                        for place in places:
+                            if len(results) >= MAX_RESULTS: break
+                            results.append(RaceMatch(field,place,label))
                 return results or None
         return None
 
@@ -154,5 +163,12 @@ class AsianOriginMatch(FieldInTableMatch):
         super(AsianOriginMatch,self).__init__(field, place)
         self.label = SPECIFIC_ASIAN_ORIGIN[self.field]
 
+class RaceMatch(FieldInTableMatch):
+    template = 'census/b02001.html'
+    table = 'B02001'
 
+    def __init__(self, field, place, label):
+        super(RaceMatch,self).__init__(field, place)
+        self.label = label
+    
 REGISTRY.add_parser('simple_census_parser', SimpleCensusParser)
