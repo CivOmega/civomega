@@ -49,6 +49,29 @@ SPECIFIC_HISPANIC_ORIGIN = { # table ID B03001
 	'b03001031': 'All other Hispanic or Latino',
 }
 
+SPECIFIC_ASIAN_ORIGIN = { # table id = B02006
+    '02006001': 'Total:',
+    '02006002': 'Asian Indian',
+    '02006003': 'Bangladeshi',
+    '02006004': 'Cambodian',
+    '02006005': 'Chinese , except Taiwanese',
+    '02006006': 'Filipino',
+    '02006007': 'Hmong',
+    '02006008': 'Indonesian',
+    '02006009': 'Japanese',
+    '02006010': 'Korean',
+    '02006011': 'Laotian',
+    '02006012': 'Malaysian',
+    '02006013': 'Pakistani',
+    '02006014': 'Sri Lankan',
+    '02006015': 'Taiwanese',
+    '02006016': 'Thai',
+    '02006017': 'Vietnamese',
+    '02006018': 'Other Asian',
+    '02006019': 'Other Asian, not specified',
+
+}
+
 class SimpleCensusParser(Parser):
     def search(self, s):
         if SIMPLE_PATTERN.match(s):
