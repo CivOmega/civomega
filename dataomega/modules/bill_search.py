@@ -4,11 +4,12 @@ from dataomega.registry import REGISTRY
 
 env = Environment(loader=PackageLoader('dataomega', 'templates'))
 
+import os
 import re
 import json
 import requests
 
-SIMPLE_PATTERN = re.compile('^\s*(?:what|which)\sbill(s?)\s(?:is|was|are|were)\sabout\s(?P<noun>.+)\??',re.IGNORECASE)
+SIMPLE_PATTERN = re.compile('^\s*(?:what|which)\sbill(s?)\s(?:is|was|are|were)\sabout\s(?P<noun>.+)',re.IGNORECASE)
 
 
 class SimpleBillSearchParser(Parser):
@@ -17,6 +18,8 @@ class SimpleBillSearchParser(Parser):
             d = SIMPLE_PATTERN.match(s).groupdict()
             # figure out which table for noun
             noun = d['noun'].strip()
+            if(noun[-1] == '?'):
+                noun = noun[0:-1]
             return SimpleBillSearchMatch(noun)
         return None
 
@@ -27,7 +30,7 @@ class SimpleBillSearchMatch(Match):
     """docstring for SimpleBillSearchMatch"""
     def __init__(self, noun):
         # we would need to get some data
-        url = 'http://congress.api.sunlightfoundation.com/bills?apikey=0b32a0061bdd4868b2b7cec4ec765add&query=%s' % noun
+        url = 'http://congress.api.sunlightfoundation.com/bills?apikey=%s&query=%s' % (os.environ['SUNLIGHT_API_KEY'], noun)
         resp = requests.get(url)
         self.data = resp.json()
         
