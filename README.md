@@ -16,7 +16,7 @@ For example, imagine you wanted to know how much money the candidate Animated Un
     import civomega
     result = civomega.search("How much much has Animated Unicorn raised?")
     result.as_json() == '{"raised": 1010000}'
-    
+
 
 So how's it all work?  You need a database, a parser that can determine if a question can be answered by a database, and the matches that can be returned.  Let's start with a *really* simple database that looks like this:
 
@@ -44,22 +44,24 @@ Now that you have a simple, in-memory database setup, you need to parse the ques
 
     import re
     import civomega
-    
-    
+
+
     class MoneyRaisedParser(civomega.Parser):
         def __init__(self):
             pattern = r'How much money has (?P<filer>([A-Z][a-z]*\s?)+) raised'
             self.matcher = re.compile(pattern)
-    
+
         def search(self, s):
             match = self.matcher.search(s)
             if match is None:
                 return None
             return MoneyRaisedMatch(s, match.groupdict())
-            
+
     civomega.site.register(MoneyRaisedParser)
 
-This parser is pretty niave since it uses a simple [regular express][regex-problems], but it's a nice demo.  The `__init__` method configures the regular expression needed to do a match and `search` handles the actual matching.  You return `None` if you know you can't handle the question, otherwise you return a Match object.
+This parser is pretty niave since it uses a simple [regular express][regex-problems], but it's a nice demo.  The `__init__` method configures the regular expression needed to do a match and `search` handles the actual matching.
+
+You return `None` if you know you can't handle the question, otherwise you return either a Match object or a `list` of Match objects.
 
 [regex-problems]: http://www.codinghorror.com/blog/2008/06/regular-expressions-now-you-have-two-problems.html
 
@@ -75,10 +77,10 @@ Once you make it this far, you have a match that might have real data associated
             else:
                 contributors = AWESOME_DATABASE[self.data['filer']]['contributors']
             self.total_money_raised = sum([a[1] for a in contributors])
-    
+
         def as_html(self):
             return str(self.total_money_raised)
-    
+
         def as_json(self):
             return json.dumps({"raised": self.total_money_raised})
 

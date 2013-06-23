@@ -73,6 +73,8 @@ SPECIFIC_ASIAN_ORIGIN = { # table id = B02006
 }
 
 
+MAX_RESULTS = 5
+
 class SimpleCensusParser(Parser):
     def search(self, s):
         if SIMPLE_PATTERN.match(s):
@@ -80,14 +82,22 @@ class SimpleCensusParser(Parser):
             places = find_places(d['place'])
             if places:
             # figure out which table for noun
+                results = []
                 noun = d['noun'].strip().lower()
                 if noun[-1] == 's': noun = noun[:-1]
                 for field,name in SPECIFIC_HISPANIC_ORIGIN.items():
                     if name.lower().startswith(noun):
-                        return HispanicOriginMatch(field, places)
+                        #results.append(HispanicOriginMatch(field, places[0]))
+                        for place in places:
+                            if len(results) >= MAX_RESULTS: break
+                            results.append(HispanicOriginMatch(field, place))
                 for field,name in SPECIFIC_ASIAN_ORIGIN.items():
                     if name.lower().startswith(noun):
-                        return AsianOriginMatch(field, places)
+                        #results.append(AsianOriginMatch(field, places[0]))
+                        for place in places:
+                            if len(results) >= MAX_RESULTS: break
+                            results.append(AsianOriginMatch(field, place))
+                return results or None
         return None
 
 
@@ -96,11 +106,10 @@ class FieldInTableMatch(Match):
     template = None # specify in subclass
     table = None # specify in subclass
     label = None # evaluate in subclass, e.g. "Dominican", "Chinese"
-    def __init__(self, field, places):
+    def __init__(self, field, place):
         self.field = field
-        self.place = places[0]
-        self.other_places = places[1:]
-        self.geoid = places[0]['full_geoid']
+        self.place = place
+        self.geoid = place['full_geoid']
         self.load_table_data()
         
     def load_table_data(self):
@@ -115,7 +124,6 @@ class FieldInTableMatch(Match):
             'place': self.place,
             'population': int(self.data[self.geoid][self.field]),
             'full_data': self.data[self.geoid],
-            'other_places': self.other_places
         }
 
     def as_json(self):
@@ -129,8 +137,8 @@ class HispanicOriginMatch(FieldInTableMatch):
     template = 'census/b03001.html'
     table = 'B03001'
 
-    def __init__(self, field, places):
-        super(HispanicOriginMatch,self).__init__(field, places)
+    def __init__(self, field, place):
+        super(HispanicOriginMatch,self).__init__(field, place)
         self.label = SPECIFIC_HISPANIC_ORIGIN[self.field]
 
     def _context(self):
@@ -142,8 +150,8 @@ class AsianOriginMatch(FieldInTableMatch):
     template = 'census/b02006.html'
     table = 'B02006'
 
-    def __init__(self, field, places):
-        super(AsianOriginMatch,self).__init__(field, places)
+    def __init__(self, field, place):
+        super(AsianOriginMatch,self).__init__(field, place)
         self.label = SPECIFIC_ASIAN_ORIGIN[self.field]
 
 

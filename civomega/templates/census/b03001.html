@@ -4,7 +4,7 @@
 </style>
 <p><b style="font-size:36px">{{ '{:,.0f}'.format(population) }}</b><br>
    Population {% if label %}of <em>{{ label }}</em>
-   origin {% endif %}in <em>{{ place.name }}</em>.</p>
+   origin {% endif %}in <em title="{{ place.geoid }}">{{ place.name }}</em>.</p>
 
 <h3>Population of <i>{{ place.name }}</i> by specific hispanic origin</h3>
 <table class="population-table">
