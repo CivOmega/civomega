@@ -16,10 +16,12 @@ def ask():
     search_results = []
     for parser_id in REGISTRY.parsers:
         parser = REGISTRY.parsers[parser_id]()
-        search = parser.search(q)
-        if search != None:
-            search_results.append(search)
-
+        search_result = parser.search(q)
+        if search_result != None:
+            if type(search_result) == list:
+                search_results.extend(search_result)
+            else:
+                search_results.append(search_result)
     out = ""
     for r in search_results:
         out += "<div class='result'>%s</div>" % r.as_html()
