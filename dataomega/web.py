@@ -20,9 +20,11 @@ def ask():
         if search != None:
             search_results.append(search)
 
-    out = "<h1>%s</h1>" % q
+    out = ""
     for r in search_results:
-        out += "<div>%s</div>" % r.as_html()
+        out += "<div class='result'>%s</div>" % r.as_html()
+    if len(search_results) == 0:
+        out += "<div>We don't understand the question yet, but that should change eventually.</div>"
 
     return out
 
