@@ -13,9 +13,7 @@ SIMPLE_PATTERN = re.compile('^\s*(?:what|which)\sbill(s?)\s(?:is|was|are|were)\s
 
 class SimpleBillSearchParser(Parser):
     def search(self, s):
-        print "TEST!"
         if SIMPLE_PATTERN.match(s):
-            print "MATCH!"
             d = SIMPLE_PATTERN.match(s).groupdict()
             # figure out which table for noun
             noun = d['noun'].strip()
