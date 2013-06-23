@@ -13,7 +13,8 @@ class TestSimpleCensusParser(unittest.TestCase):
         
         self.assertIsNotNone(match.as_json())
         d = json.loads(match.as_json())
-        self.assertEquals(695158,d['04000US36']['b03001007'])
+        self.assertEquals('04000US36',d['place']['full_geoid'])
+        self.assertEquals(695158,d['population'])
         
         q = "how many chileans in new york?"
         match = self.parser.search(q)
@@ -21,6 +22,7 @@ class TestSimpleCensusParser(unittest.TestCase):
         
         self.assertIsNotNone(match.as_json())
         d = json.loads(match.as_json())
-        self.assertEquals(16764,d['04000US36']['b03001019'])
+        self.assertEquals('04000US36',d['place']['full_geoid'])
+        self.assertEquals(16764,d['population'])
         
         

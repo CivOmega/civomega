@@ -53,9 +53,9 @@ class SimpleCensusParser(Parser):
             # figure out which table for noun
             noun = d['noun'].strip()
             if noun.lower().startswith('dominican'):
-                field = "B03001007"
+                field = "b03001007"
             elif noun.lower().startswith('chile'):
-                field = "B03001019"
+                field = "b03001019"
             # if we didn't get a table, we would return before making this API call...
             if field:
                 places = find_places(d['place'])
@@ -63,11 +63,13 @@ class SimpleCensusParser(Parser):
         return None
 
 class HispanicOriginMatch(Match):
+    template = ""
     """docstring for SimpleCensusMatch"""
     def __init__(self, field, places):
         self.table = 'B03001'
         self.field = field
-        self.places = places
+        self.place = places[0]
+        self.other_places = places[1:]
         self.geoid = places[0]['full_geoid']
         # we would need to get some data
         url = 'http://api.censusreporter.org/1.0/acs2011_5yr/B03001?geoids=%s' % self.geoid
@@ -76,9 +78,10 @@ class HispanicOriginMatch(Match):
         
     def as_json(self):
         d = {
+            'place': self.place,
             'population': self.data[self.geoid][self.field],
-            'full_data': self.data,
-            'other_places': self.places[1:]
+            'full_data': self.data[self.geoid],
+            'other_places': self.other_places
         }
         return json.dumps(d)
         
