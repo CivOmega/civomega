@@ -56,15 +56,16 @@ class SupportedBillSearchMatch(Match):
     """docstring for SimpleBillSearchMatch"""
     def __init__(self, names):
         # Find the legislator
-        url = 'http://congress.api.sunlightfoundation.com/legislators?apikey=%s&first_name=%s&last_name=%s' % (os.environ['SUNLIGHT_API_KEY'], names[0].title(), names[-1].title())
+        url = 'http://congress.api.sunlightfoundation.com/legislators?apikey=%s&first_name=%s&last_name=%s' % (os.environ['SUNLIGHT_API_KEY'], names[0][0].capitalize() + names[0][1:], names[-1][0].capitalize() + names[-1][1:])
         resp = requests.get(url)
         data = resp.json()
+        print names[-1].capitalize()
         if(len(data['results']) == 0):
-            url = 'http://congress.api.sunlightfoundation.com/legislators?apikey=%s&nickname=%s&last_name=%s' % (os.environ['SUNLIGHT_API_KEY'], names[0].title(), names[-1].title())
+            url = 'http://congress.api.sunlightfoundation.com/legislators?apikey=%s&nickname=%s&last_name=%s' % (os.environ['SUNLIGHT_API_KEY'], names[0][0].capitalize() + names[0][1:], names[-1][0].capitalize() + names[-1][1:])
             resp = requests.get(url)
             data = resp.json()
         if(len(data['results']) == 0):
-            url = 'http://congress.api.sunlightfoundation.com/legislators?apikey=%s&last_name=%s' % (os.environ['SUNLIGHT_API_KEY'], names[-1].title())
+            url = 'http://congress.api.sunlightfoundation.com/legislators?apikey=%s&last_name=%s' % (os.environ['SUNLIGHT_API_KEY'], names[-1][0].capitalize() + names[-1][1:])
             resp = requests.get(url)
             data = resp.json()
 
