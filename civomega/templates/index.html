@@ -15,11 +15,51 @@
         )
         return false;
       });
+      var trigger_search = function() {
+        $("#question-form").submit();
+      };
+      var update_history = function() {
+        if (typeof(history.pushState) !== "undefined") {
+          history.pushState({}, null, "/?" + $.param({
+            'q': $("#question").val()
+          }));
+        }
+      };
+      var read_qs = function() {
+        var qs = (function(a) {
+          if (a == "") return {};
+          var b = {};
+          for (var i = 0; i < a.length; ++i) {
+            var p=a[i].split('=');
+            if (p.length != 2) continue;
+            b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+          }
+          return b;
+        })(window.location.search.substr(1).split('&'));
+        if (!!(qs['q'])) {
+          console.log(qs['q']);
+          $("#question").val(qs['q']);
+          $("#question-form").submit();
+        }
+      };
+
+
+      window.onpopstate = function(event) {
+        read_qs();
+        trigger_search();
+      };
       $(".example-question").click(function() {
         $("#question").val($(this).text());
-        $("#question-form").submit();
+        trigger_search();
+        update_history();
         return false;
       });
+
+      if (!!($("#question").val()) && typeof(history.replaceState) !== "undefined") {
+        history.replaceState({}, null, "/?" + $.param({
+          'q': $("#question").val()
+        }));
+      }
     });
   </script>
 {% endblock %}
