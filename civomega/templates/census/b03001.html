@@ -1,1 +1,4 @@
-<p>{{ label }} population in {{ place.name }}: {{ '{:,.0f}'.format(population) }}</p>
+<p>Population {% if label %}of <i>{{ label }}</i>
+   origin {% endif %}in <i>{{ place.name }}</i>:<br>
+   <b>{{ '{:,.0f}'.format(population) }}</b>
+</p>
