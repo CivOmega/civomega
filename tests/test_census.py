@@ -28,3 +28,13 @@ class TestSimpleCensusParser(unittest.TestCase):
         self.assertEquals(16764,d['population'])
 
 
+    def test_asian_questions(self):
+        q = 'how many chinese in New York?'
+        match = self.parser.search(q)
+        self.assertIsNotNone(match)
+
+        self.assertIsNotNone(match.as_json())
+        d = json.loads(match.as_json())
+        self.assertEquals('04000US36',d['place']['full_geoid'])
+        self.assertEquals(564836,d['population'])
+        

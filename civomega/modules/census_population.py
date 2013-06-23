@@ -50,58 +50,61 @@ SPECIFIC_HISPANIC_ORIGIN = { # table ID B03001
 }
 
 SPECIFIC_ASIAN_ORIGIN = { # table id = B02006
-    '02006001': 'Total:',
-    '02006002': 'Asian Indian',
-    '02006003': 'Bangladeshi',
-    '02006004': 'Cambodian',
-    '02006005': 'Chinese , except Taiwanese',
-    '02006006': 'Filipino',
-    '02006007': 'Hmong',
-    '02006008': 'Indonesian',
-    '02006009': 'Japanese',
-    '02006010': 'Korean',
-    '02006011': 'Laotian',
-    '02006012': 'Malaysian',
-    '02006013': 'Pakistani',
-    '02006014': 'Sri Lankan',
-    '02006015': 'Taiwanese',
-    '02006016': 'Thai',
-    '02006017': 'Vietnamese',
-    '02006018': 'Other Asian',
-    '02006019': 'Other Asian, not specified',
+    'b02006001': 'Total:',
+    'b02006002': 'Asian Indian',
+    'b02006003': 'Bangladeshi',
+    'b02006004': 'Cambodian',
+    'b02006005': 'Chinese , except Taiwanese',
+    'b02006006': 'Filipino',
+    'b02006007': 'Hmong',
+    'b02006008': 'Indonesian',
+    'b02006009': 'Japanese',
+    'b02006010': 'Korean',
+    'b02006011': 'Laotian',
+    'b02006012': 'Malaysian',
+    'b02006013': 'Pakistani',
+    'b02006014': 'Sri Lankan',
+    'b02006015': 'Taiwanese',
+    'b02006016': 'Thai',
+    'b02006017': 'Vietnamese',
+    'b02006018': 'Other Asian',
+    'b02006019': 'Other Asian, not specified',
 
 }
+
 
 class SimpleCensusParser(Parser):
     def search(self, s):
         if SIMPLE_PATTERN.match(s):
-            field = None
             d = SIMPLE_PATTERN.match(s).groupdict()
+            places = find_places(d['place'])
+            if places:
             # figure out which table for noun
-            noun = d['noun'].strip()
-            if noun.lower().startswith('dominican'):
-                field = "b03001007"
-            elif noun.lower().startswith('chile'):
-                field = "b03001019"
-            # if we didn't get a table, we would return before making this API call...
-            if field:
-                places = find_places(d['place'])
-                return HispanicOriginMatch(field, places)
+                noun = d['noun'].strip().lower()
+                if noun[-1] == 's': noun = noun[:-1]
+                for field,name in SPECIFIC_HISPANIC_ORIGIN.items():
+                    if name.lower().startswith(noun):
+                        return HispanicOriginMatch(field, places)
+                for field,name in SPECIFIC_ASIAN_ORIGIN.items():
+                    if name.lower().startswith(noun):
+                        return AsianOriginMatch(field, places)
         return None
 
 
 
-class HispanicOriginMatch(Match):
-    template = ""
-    """docstring for SimpleCensusMatch"""
+class FieldInTableMatch(Match):
+    template = None # specify in subclass
+    table = None # specify in subclass
     def __init__(self, field, places):
-        self.table = 'B03001'
         self.field = field
         self.place = places[0]
         self.other_places = places[1:]
         self.geoid = places[0]['full_geoid']
+        self.load_table_data()
+        
+    def load_table_data(self):
         # we would need to get some data
-        url = 'http://api.censusreporter.org/1.0/acs2011_5yr/B03001?geoids=%s' % self.geoid
+        url = 'http://api.censusreporter.org/1.0/acs2011_5yr/%s?geoids=%s' % (self.table,self.geoid)
         resp = requests.get(url)
         self.data = resp.json()
 
@@ -112,11 +115,28 @@ class HispanicOriginMatch(Match):
             'full_data': self.data[self.geoid],
             'other_places': self.other_places
         }
+
     def as_json(self):
         return json.dumps(self._context())
 
     def as_html(self):
-        template = env.get_template('census/b03001.html')
-        return template.render(**self._context())
+        return env.get_template(self.template).render(**self._context())
+
+        
+class HispanicOriginMatch(FieldInTableMatch):
+    template = 'census/b03001.html'
+    table = 'B03001'
+
+    def __init__(self, field, places):
+        super(HispanicOriginMatch,self).__init__(field, places)
+
+
+class AsianOriginMatch(FieldInTableMatch):
+    template = 'census/b03001.html'
+    table = 'B02006'
+
+    def __init__(self, field, places):
+        super(AsianOriginMatch,self).__init__(field, places)
+
 
 REGISTRY.add_parser('simple_census_parser', SimpleCensusParser)
