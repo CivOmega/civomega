@@ -110,6 +110,8 @@ class FieldInTableMatch(Match):
 
     def _context(self):
         return {
+            'demographic': SPECIFIC_HISPANIC_ORIGIN.get(self.field,
+                SPECIFIC_ASIAN_ORIGIN.get(self.field, None)),
             'place': self.place,
             'population': self.data[self.geoid][self.field],
             'full_data': self.data[self.geoid],
