@@ -1,4 +1,6 @@
 from dataomega import Parser, Match
+from jinja2 import Environment, PackageLoader
+env = Environment(loader=PackageLoader('dataomega', 'templates'))
 
 import re
 import json
@@ -76,15 +78,17 @@ class HispanicOriginMatch(Match):
         resp = requests.get(url)
         self.data = resp.json()
         
-    def as_json(self):
-        d = {
+    def _context(self):
+        return {
             'place': self.place,
             'population': self.data[self.geoid][self.field],
             'full_data': self.data[self.geoid],
             'other_places': self.other_places
         }
-        return json.dumps(d)
+    def as_json(self):
+        return json.dumps(self._context())
         
     def as_html(self):
-        pass
+        template = env.get_template('census/b03001.html')
+        return template.render(**self._context())
     
