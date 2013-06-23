@@ -72,9 +72,9 @@ SPECIFIC_ASIAN_ORIGIN = { # table id = B02006
 }
 
 RACE_PATTERNS = [ # pattern, field, label
-    (re.compile('black( people)?|(african|afro)[-\s]?american|african american|negro.*'), 'b02001003', 'Black or African American alone'),
-    (re.compile('white( people|s)?'), 'b02001002', 'White alone'),
-    (re.compile('asian( people|s)?'), 'b02001005', 'Asian alone'),
+    (re.compile('black( people|s|folks?)?|(african|afro)[-\s]?american|african american|negro.*'), 'b02001003', 'Black or African American alone'),
+    (re.compile('white( people|s|folks?)?'), 'b02001002', 'White alone'),
+    (re.compile('asian( people|s|folks?)?'), 'b02001005', 'Asian alone'),
 ]
 
 MAX_RESULTS = 5
@@ -106,7 +106,7 @@ class SimpleCensusParser(Parser):
                         for place in places:
                             if len(results) >= MAX_RESULTS: break
                             results.append(RaceMatch(field,place,label))
-				results.sort(key=lambda x: x._context()['population'], reverse=True)
+                results.sort(key=lambda x: x._context()['population'], reverse=True)
                 return results or None
         return None
 
