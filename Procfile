@@ -1,1 +1,1 @@
-web: gunicorn civomega.web:app
+web: make run

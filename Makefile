@@ -7,7 +7,7 @@ install:
 	python setup.py develop
 
 run:
-	foreman start
+	gunicorn civomega.web:app
 
 test:
 	nosetests
