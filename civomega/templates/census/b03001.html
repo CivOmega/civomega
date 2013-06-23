@@ -1,1 +1,4 @@
-<p>Population {% if demographic %}of <i>{{ demographic }}</i> origin {% endif %}in <i>{{ place.name }}</i>: {{ population }}</p>
+<p>Population {% if demographic %}of <i>{{ demographic }}</i>
+   origin {% endif %}in <i>{{ place.name }}</i>:<br>
+   <b>{{ population|int }}</b>
+</p>
