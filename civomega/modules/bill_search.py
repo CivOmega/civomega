@@ -8,7 +8,7 @@ import re
 import json
 import requests
 
-SIMPLE_PATTERN = re.compile('^\s*(?:what|which)\sbill(s?)\s(?:is|was|are|were)\sabout\s(?P<noun>.+)\??',re.IGNORECASE)
+SIMPLE_PATTERN = re.compile('^\s*(?:what|which)\s(?:legislative\s)?bill(s?)\s(?:is|was|are|were)\sabout\s(?P<noun>[\w\s]+)\??',re.IGNORECASE)
 
 
 class SimpleBillSearchParser(Parser):
