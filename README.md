@@ -1,5 +1,7 @@
 # CivOmega
 
+[http://www.civomega.com/](http://www.civomega.com/)
+
 CivOmega makes asking questions of complex data easier.  It's a simple tool for helping you map plain-text questions to the data that you have stored in your database.
 
 *Word of Warning*
