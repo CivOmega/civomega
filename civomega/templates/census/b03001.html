@@ -1,4 +1,47 @@
+{% macro indent(depth) %}{% for i in range(0,depth) %}&nbsp;&nbsp;&nbsp;&nbsp;{% endfor %}{% endmacro %}
+<style>
+  table.population-table tr td { text-align: left; }
+</style>
 <p>Population {% if label %}of <i>{{ label }}</i>
    origin {% endif %}in <i>{{ place.name }}</i>:<br>
    <b>{{ '{:,.0f}'.format(population) }}</b>
 </p>
+<h3>Population of <i>{{ place.name }}</i> by specific hispanic origin</h3>
+<table class="population-table">
+  <th>
+    <td>Origin</td><td>Population</td>
+  </th>
+  <tr><td>Total:</td><td>{{ '{:,.0f}'.format(full_data['b03001001']) }}</td></tr>
+  <tr><td>{{ indent(1) }}Not Hispanic or Latino</td><td>{{ '{:,.0f}'.format(full_data['b03001002']) }}</td></tr>
+  <tr><td>{{ indent(1) }}Hispanic or Latino</td><td>{{ '{:,.0f}'.format(full_data['b03001003']) }}</td></tr>
+  <tr><td>{{ indent(2) }}Mexican</td><td>{{ '{:,.0f}'.format(full_data['b03001004']) }}</td></tr>
+  <tr><td>{{ indent(2) }}Puerto Rican</td><td>{{ '{:,.0f}'.format(full_data['b03001005']) }}</td></tr>
+  <tr><td>{{ indent(2) }}Cuban</td><td>{{ '{:,.0f}'.format(full_data['b03001006']) }}</td></tr>
+  <tr><td>{{ indent(2) }}Dominican (Dominican Republic)</td><td>{{ '{:,.0f}'.format(full_data['b03001007']) }}</td></tr>
+  <tr><td>{{ indent(2) }}Central American:</td><td>{{ '{:,.0f}'.format(full_data['b03001008']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Costa Rican</td><td>{{ '{:,.0f}'.format(full_data['b03001009']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Guatemalan</td><td>{{ '{:,.0f}'.format(full_data['b03001010']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Honduran</td><td>{{ '{:,.0f}'.format(full_data['b03001011']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Nicaraguan</td><td>{{ '{:,.0f}'.format(full_data['b03001012']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Panamanian</td><td>{{ '{:,.0f}'.format(full_data['b03001013']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Salvadoran</td><td>{{ '{:,.0f}'.format(full_data['b03001014']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Other Central American</td><td>{{ '{:,.0f}'.format(full_data['b03001015']) }}</td></tr>
+  <tr><td>{{ indent(2) }}South American</td><td>{{ '{:,.0f}'.format(full_data['b03001016']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Argentinean</td><td>{{ '{:,.0f}'.format(full_data['b03001017']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Bolivian</td><td>{{ '{:,.0f}'.format(full_data['b03001018']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Chilean</td><td>{{ '{:,.0f}'.format(full_data['b03001019']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Colombian</td><td>{{ '{:,.0f}'.format(full_data['b03001020']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Ecuadorian</td><td>{{ '{:,.0f}'.format(full_data['b03001021']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Paraguayan</td><td>{{ '{:,.0f}'.format(full_data['b03001022']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Peruvian</td><td>{{ '{:,.0f}'.format(full_data['b03001023']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Uruguayan</td><td>{{ '{:,.0f}'.format(full_data['b03001024']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Venezuelan</td><td>{{ '{:,.0f}'.format(full_data['b03001025']) }}</td></tr>
+  <tr><td>{{ indent(3) }}Other South American</td><td>{{ '{:,.0f}'.format(full_data['b03001026']) }}</td></tr>
+  <tr><td>{{ indent(2) }}Other Hispanic or Latino</td><td>{{ '{:,.0f}'.format(full_data['b03001027']) }}</td></tr>
+  <tr><td>{{ indent(2) }}Spaniard</td><td>{{ '{:,.0f}'.format(full_data['b03001028']) }}</td></tr>
+  <tr><td>{{ indent(2) }}Spanish</td><td>{{ '{:,.0f}'.format(full_data['b03001029']) }}</td></tr>
+  <tr><td>{{ indent(2) }}Spanish American</td><td>{{ '{:,.0f}'.format(full_data['b03001030']) }}</td></tr>
+  <tr><td>{{ indent(2) }}All other Hispanic or Latino</td><td>{{ '{:,.0f}'.format(full_data['b03001031']) }}</td></tr>
+</table>
+<p><em>Source: American Community Survey 2007-2011, table B03001</em></p>
+<p><em>Data provided by the <a href="http://beta.censusreporter.org">Census Reporter</a></em></p>

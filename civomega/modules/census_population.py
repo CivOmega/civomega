@@ -133,8 +133,13 @@ class HispanicOriginMatch(FieldInTableMatch):
         super(HispanicOriginMatch,self).__init__(field, places)
         self.label = SPECIFIC_HISPANIC_ORIGIN[self.field]
 
+    def _context(self):
+        d = super(HispanicOriginMatch,self)._context()
+        d['field_labels'] = SPECIFIC_HISPANIC_ORIGIN
+        return d
+        
 class AsianOriginMatch(FieldInTableMatch):
-    template = 'census/b03001.html'
+    template = 'census/b02006.html'
     table = 'B02006'
 
     def __init__(self, field, places):
