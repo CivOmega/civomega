@@ -70,10 +70,9 @@ p {
 	background: #F6EAD2;
 	margin: 10px; 
 	padding: 10px;
+	border-radius: 3px;
 }
 
-.result table {
-}
 .result table td {
 	padding: 4px;
 }
@@ -86,6 +85,11 @@ p {
 	position: absolute;
 	top: 9px;
 	display: none;
+}
+
+.notfound {
+	font-style: italic;
+	color: #ccc;
 }
 
 @media (max-width: 767px) {

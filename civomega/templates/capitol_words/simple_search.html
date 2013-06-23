@@ -1,0 +1,20 @@
+<table class="tablesorter">
+	<thead>
+		<tr>
+			<th style="width: 50%;">Legislator</th>
+			<th style="width: 50%;">Number of times mentioned</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for item in results %}
+		<tr>
+			<td>{{ item.legislator }}</td>
+			<td>{{ item.count }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+<script type="text/javascript">
+	$(".tablesorter").tablesorter();
+</script>
+<p><em>Data provided by the <a href="http://sunlightfoundation.com">Sunlight Foundation</a></em></p>
