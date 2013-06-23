@@ -6,9 +6,9 @@ Where are most Mexican immigrants moving?
 tell me about Chicago
 tell me about mexicans in Chicago
 tell me about poverty in Chicago
-tell me how Chicago compares to other [places, metro areas]
+tell me how Chicago compares to other cities
 Tell me about poverty
-tell me about mexicans(?)
+tell me about mexicans
 What's the richest city in America?
 How many veterans are in poverty?
 How many single mothers dropped out of high school?
@@ -23,4 +23,6 @@ What is the average age of mortgage-holders in the US?
 What languages are spoken in Cambridge, Massachusetts?
 How many families are single vs double income?
 How many families rent vs own in Brooklyn?
-
+What is the largest city in Colorado?
+What are the ten largest cities in the US?
+Which are the 5 richest towns in New York?

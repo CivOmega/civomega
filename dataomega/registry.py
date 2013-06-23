@@ -1,17 +1,15 @@
-
-
-class MatcherRegistry(object):
+class ParserRegistry(object):
 
     def __init__(self):
-        self.matchers = {}
+        self.parsers = {}
 
-    def add_matcher(self, name, matcher_cls):
-        self.matchers[name] = matcher
+    def add_parser(self, name, parser_cls):
+        self.parsers[name] = parser_cls
 
     def __iter__(self):
-        return self.matchers.values()
+        return self.parsers.values()
 
 
-REGISTRY = MatcherRegistry()
+REGISTRY = ParserRegistry()
 
-# REGISTRY.add_matcher('census', CensusMatcher)
+# REGISTRY.add_parser('census', CensusParser)
