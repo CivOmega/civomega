@@ -79,3 +79,12 @@ p {
 .result table td {
 	padding: 4px;
 }
+
+#question-form {
+	position: relative;
+}
+#spinner {
+	position: absolute;
+	right: 120px;
+	top: 8px;
+}
