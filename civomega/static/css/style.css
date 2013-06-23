@@ -79,3 +79,28 @@ p {
 .result table td {
 	padding: 4px;
 }
+
+#question-form {
+	position: relative;
+}
+#spinner {
+	position: absolute;
+	top: 9px;
+	display: none;
+}
+@media (max-width: 767px) {
+	#spinner {
+		right: 10px;
+		top: 7px;
+	}
+}
+@media (min-width: 768px) and (max-width: 979px) {
+	#spinner {
+		right: 120px;
+	}
+}
+@media (min-width: 980px) {
+	#spinner {
+		right: 155px;
+	}
+}
