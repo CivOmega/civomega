@@ -1,5 +1,7 @@
 from dataomega import Parser, Match
 from jinja2 import Environment, PackageLoader
+from dataomega.registry import REGISTRY
+
 env = Environment(loader=PackageLoader('dataomega', 'templates'))
 
 import re
@@ -64,6 +66,8 @@ class SimpleCensusParser(Parser):
                 return HispanicOriginMatch(field, places)
         return None
 
+
+
 class HispanicOriginMatch(Match):
     template = ""
     """docstring for SimpleCensusMatch"""
@@ -91,4 +95,5 @@ class HispanicOriginMatch(Match):
     def as_html(self):
         template = env.get_template('census/b03001.html')
         return template.render(**self._context())
-    
+
+REGISTRY.add_parser('simple_census_parser', SimpleCensusParser)
