@@ -16,6 +16,8 @@ class TestSimpleCensusParser(unittest.TestCase):
         self.assertEquals('04000US36',d['place']['full_geoid'])
         self.assertEquals(695158,d['population'])
         
+        self.assertTrue('New York' in match.as_html())
+        self.assertTrue('695158' in match.as_html())
         q = "how many chileans in new york?"
         match = self.parser.search(q)
         self.assertIsNotNone(match)
