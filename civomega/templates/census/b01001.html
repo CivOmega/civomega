@@ -1,0 +1,12 @@
+{% macro indent(depth) %}{% for i in range(0,depth) %}&nbsp;&nbsp;&nbsp;&nbsp;{% endfor %}{% endmacro %}
+<style>
+  table.population-table tr td.census-label { text-align: left; }
+  table.population-table tr td.census-value { text-align: right; }
+</style>
+<p><b style="font-size:36px">{{ '{:,.0f}'.format(population) }}</b><br>
+   {{ label }} population in <em title="{{ place.geoid }}">{{ place.name }}</em>.</p>
+
+
+<p><em>Source: American Community Survey 2007-2011, table B01001<br>
+Data provided by the <a href="http://www.census.gov/">United States Census Bureau</a>
+and <a href="http://censusreporter.org/">CensusReporter</a>.</em></p>

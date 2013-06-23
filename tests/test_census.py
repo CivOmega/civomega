@@ -1,6 +1,15 @@
 import unittest
 import json
-from civomega.modules.census_population import SimpleCensusParser
+from civomega.modules.census_population import SimpleCensusParser, SexAgeCensusParser
+
+class TestSexAgeCensusParser(unittest.TestCase):
+    def setUp(self):
+        self.parser = SexAgeCensusParser()
+
+    def test_questions(self):
+        q = 'how many men in New York?'
+        match = self.parser.search(q)
+        self.assertIsNotNone(match)
 
 class TestSimpleCensusParser(unittest.TestCase):
     def setUp(self):
