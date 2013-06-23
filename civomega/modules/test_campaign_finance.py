@@ -39,11 +39,13 @@ class MoneyRaisedParser(Parser):
         return MoneyRaisedMatch(s, match.groupdict())
 
 
-
 class MoneyRaisedMatch(Match):
     def extract(self):
-        contributors = AWESOME_DATABASE[self.data['filer']]['contributors']
-        self.total_money_raised = sum(map(lambda x: x[1], contributors))
+        if self.data['filer'] not in AWESOME_DATABASE:
+            contributors = []
+        else:
+            contributors = AWESOME_DATABASE[self.data['filer']]['contributors']
+        self.total_money_raised = sum([a[1] for a in contributors])
 
     def as_html(self):
         return str(self.total_money_raised)
@@ -62,7 +64,6 @@ class ContributorParser(Parser):
         if match is None:
             return None
         return ContributorsListMatch(s, match.groupdict())
-
 
 
 class ContributorsListMatch(Match):

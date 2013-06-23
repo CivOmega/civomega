@@ -17,8 +17,8 @@ class TestSimpleCensusParser(unittest.TestCase):
         self.assertEquals(695158,d['population'])
 
         self.assertTrue('New York' in match.as_html())
-        self.assertTrue('695158' in match.as_html())
-        q = "how many chileans in new york?"
+        self.assertTrue('695,158' in match.as_html())
+        q = "how many chileans live in new york?"
         match = self.parser.search(q)
         self.assertIsNotNone(match)
 
@@ -29,7 +29,7 @@ class TestSimpleCensusParser(unittest.TestCase):
 
 
     def test_asian_questions(self):
-        q = 'how many chinese in New York?'
+        q = 'how many chinese are in New York?'
         match = self.parser.search(q)
         self.assertIsNotNone(match)
 

@@ -1,0 +1,36 @@
+{% macro indent(depth) %}{% for i in range(0,depth) %}&nbsp;&nbsp;&nbsp;&nbsp;{% endfor %}{% endmacro %}
+<style>
+table.population-table tr td.census-label { text-align: left; }
+table.population-table tr td.census-value { text-align: right; }
+</style>
+<p><b style="font-size:36px">{{ '{:,.0f}'.format(population) }}</b><br>
+   Population {% if label %}of <em>{{ label }}</em>
+   origin {% endif %}in <em>{{ place.name }}</em>.</p>
+
+<h3>Asian-alone population of <i>{{ place.name }}</i> by selected groups</h3>
+<table class="population-table">
+  <tr>
+    <th>Origin</th><th>Population</th>
+  </tr>
+  <tr><td class="census-label">Total:</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006001']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Asian Indian</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006002']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Bangladeshi</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006003']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Cambodian</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006004']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Chinese , except Taiwanese</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006005']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Filipino</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006006']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Hmong</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006007']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Indonesian</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006008']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Japanese</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006009']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Korean</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006010']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Laotian</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006011']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Malaysian</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006012']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Pakistani</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006013']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Sri Lankan</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006014']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Taiwanese</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006015']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Thai</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006016']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Vietnamese</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006017']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Other Asian</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006018']) }}</td></tr>
+  <tr><td class="census-label">{{ indent(1) }}Other Asian, not specified</td><td class="value">{{ '{:,.0f}'.format(full_data['b02006019']) }}</td></tr>
+</table>
+<p><em>Source: American Community Survey 2007-2011, table B02006</em></p>
+<p><em>Data provided by the <a href="http://www.census.gov/">United States Census Bureau</a> and <a href="http://censusreporter.org/">CensusReporter</a>.</em></p>
