@@ -8,7 +8,7 @@ import re
 import json
 import requests
 
-SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)(?P<noun>.+)\s+in\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
+SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)(?P<noun>.+?)\s+(?:live in|are in|in)\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
 
 def find_places(p):
     url = 'http://api.censusreporter.org/1.0/geo/search?prefix=%s' % p
@@ -95,6 +95,7 @@ class SimpleCensusParser(Parser):
 class FieldInTableMatch(Match):
     template = None # specify in subclass
     table = None # specify in subclass
+    label = None # evaluate in subclass, e.g. "Dominican", "Chinese"
     def __init__(self, field, places):
         self.field = field
         self.place = places[0]
@@ -110,8 +111,9 @@ class FieldInTableMatch(Match):
 
     def _context(self):
         return {
+            'label': self.label,
             'place': self.place,
-            'population': self.data[self.geoid][self.field],
+            'population': int(self.data[self.geoid][self.field]),
             'full_data': self.data[self.geoid],
             'other_places': self.other_places
         }
@@ -129,7 +131,7 @@ class HispanicOriginMatch(FieldInTableMatch):
 
     def __init__(self, field, places):
         super(HispanicOriginMatch,self).__init__(field, places)
-
+        self.label = SPECIFIC_HISPANIC_ORIGIN[self.field]
 
 class AsianOriginMatch(FieldInTableMatch):
     template = 'census/b03001.html'
@@ -137,6 +139,7 @@ class AsianOriginMatch(FieldInTableMatch):
 
     def __init__(self, field, places):
         super(AsianOriginMatch,self).__init__(field, places)
+        self.label = SPECIFIC_ASIAN_ORIGIN[self.field]
 
 
 REGISTRY.add_parser('simple_census_parser', SimpleCensusParser)
