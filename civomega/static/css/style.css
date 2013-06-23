@@ -85,6 +85,22 @@ p {
 }
 #spinner {
 	position: absolute;
-	right: 120px;
-	top: 8px;
+	top: 9px;
+	display: none;
+}
+@media (max-width: 767px) {
+	#spinner {
+		right: 10px;
+		top: 7px;
+	}
+}
+@media (min-width: 768px) and (max-width: 979px) {
+	#spinner {
+		right: 120px;
+	}
+}
+@media (min-width: 980px) {
+	#spinner {
+		right: 155px;
+	}
 }
