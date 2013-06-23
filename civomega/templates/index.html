@@ -6,9 +6,10 @@
     $(function() {
       $("#question-form").submit(function() {
         $("#results").load(
-          "{{url_for('ask')}}",
-          $("#question-form").serialize()
-        )
+          "{{url_for('ask')}}", $("#question-form").serialize(), function() {
+            $(".tablesorter").tablesorter().fadeIn();
+          }
+        );
         return false;
       })
     })

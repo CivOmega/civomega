@@ -79,10 +79,10 @@ class ContributorsListMatch(Match):
         if not self.contributors:
             return None
 
-        r = "<ul>"
+        r = "<table class='tablesorter'><thead><tr><th>Contributors</th></tr></thead><tbody>"
         for contributor in self.contributors:
-            r += "<li>%s</li>" % contributor
-        r += "</ul>"
+            r += "<tr><td>%s</td></tr>" % contributor
+        r += "</tbody></table>"
         return r
 
     def as_json(self):
