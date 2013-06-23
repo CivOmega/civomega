@@ -7,6 +7,7 @@ env = Environment(loader=PackageLoader('civomega', 'templates'))
 import re
 import json
 import requests
+import bisect
 
 SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)(?P<noun>.+)\s+in\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
 
@@ -72,6 +73,86 @@ SPECIFIC_ASIAN_ORIGIN = { # table id = B02006
 
 }
 
+SEX_AGE = { # table id B01001
+    'key_ages': [
+        0,
+        5,
+        10,
+        15,
+        18,
+        20,
+        21,
+        22,
+        25,
+        30,
+        35,
+        40,
+        45,
+        50,
+        55,
+        60,
+        62,
+        65,
+        67,
+        70,
+        75,
+        80,
+        85,
+        3200,
+        454656456
+    ],
+    'male': {
+        0: "b01001003", # means 0 to 4 years old
+        5: "b01001004", 
+        10: "b01001005",
+        15: "b01001006",
+        18: "b01001007",
+        20: "b01001008",
+        21: "b01001009",
+        22: "b01001010",
+        25: "b01001011",
+        30: "b01001012",
+        35: "b01001013",
+        40: "b01001014",
+        45: "b01001015",
+        50: "b01001016",
+        55: "b01001017",
+        60: "b01001018",
+        62: "b01001019",
+        65: "b01001020",
+        67: "b01001021",
+        70: "b01001022",
+        75: "b01001023",
+        80: "b01001024",
+        85: "b01001049"
+    },
+    'female': {
+        0: "b01001027", 
+        5: "b01001028", 
+        10: "b01001029",
+        15: "b01001030",
+        18: "b01001031",
+        20: "b01001032",
+        21: "b01001033",
+        22: "b01001034",
+        25: "b01001035",
+        30: "b01001036",
+        35: "b01001037",
+        40: "b01001038",
+        45: "b01001039",
+        50: "b01001040",
+        55: "b01001041",
+        60: "b01001042",
+        62: "b01001043",
+        65: "b01001044",
+        67: "b01001045",
+        70: "b01001046",
+        75: "b01001047",
+        80: "b01001048",
+        85: "b01001049"
+    }
+}
+
 
 class SimpleCensusParser(Parser):
     def search(self, s):
@@ -90,6 +171,20 @@ class SimpleCensusParser(Parser):
                         return AsianOriginMatch(field, places)
         return None
 
+class SexAgeCensusParser(Parser):
+    def search(self, s):
+        if SIMPLE_PATTERN.match(s):
+            d = SIMPLE_PATTERN.match(s).groupdict()
+            places = find_places(d['place'])
+            if places:
+                noun = d['noun'].strip().lower()
+                if noun == "men":
+                    return SexAgeMatch(['male'], 0, 200, places)
+                elif noun == "women":
+                    return SexAgeMatch(['female'], 0, 200, places)
+                elif noun == "people":
+                    return SexAgeMatch(['male','female'], 0, 200, places)
+        return None
 
 
 class FieldInTableMatch(Match):
@@ -138,5 +233,54 @@ class AsianOriginMatch(FieldInTableMatch):
     def __init__(self, field, places):
         super(AsianOriginMatch,self).__init__(field, places)
 
+class SexAgeMatch(FieldInTableMatch):
+    template = 'census/b03001.html'
+    table = 'B01001'
+
+    def __init__(self, sexes, min_age, max_age,  places):
+        super(SexAgeMatch, self).__init__(None, places)
+        self.sexes = sexes
+        self.added_fields = []
+        self.min_age = min_age
+        self.max_age = max_age
+        self.returned_min_age = 200
+        self.returned_max_age = 0
+
+    def _context(self):
+        self.total_population = 0
+        for sex in self.sexes:
+            for age in range(self.min_age, self.max_age):
+                self._add_bucket(sex, age)
+        return {
+            'place': self.place,
+            'population': self.total_population,
+            'age_range': (self.returned_min_age, self.returned_max_age),
+            'full_data': self.data[self.geoid],
+            'other_places': self.other_places
+        }
+
+    def _add_bucket(self, sex, age):
+        i = bisect.bisect_left(SEX_AGE['key_ages'], age)
+        
+        possible_min = SEX_AGE['key_ages'][i]
+        possible_max = SEX_AGE['key_ages'][i+1] - 1
+
+        if possible_min < self.returned_min_age:
+            self.returned_min_age = possible_min
+        if possible_max > self.returned_max_age:
+            self.returned_max_age = possible_max
+
+        x = SEX_AGE['key_ages'][i]
+        if x > 85:
+            x = 85
+
+        field = SEX_AGE[sex][x]
+        if field not in self.added_fields:
+            self.added_fields.append(field)
+            self.total_population += self.data[self.geoid][field]
+
+        
+
 
 REGISTRY.add_parser('simple_census_parser', SimpleCensusParser)
+REGISTRY.add_parser('sex_age_census_parser', SexAgeCensusParser)
