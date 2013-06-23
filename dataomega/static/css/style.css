@@ -71,3 +71,11 @@ p {
 	margin: 10px; 
 	padding: 10px;
 }
+
+.result table {
+	width: 100%;
+	text-align: left;
+}
+.result table td {
+	padding: 4px;
+}
