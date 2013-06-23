@@ -97,6 +97,8 @@ class SimpleCensusParser(Parser):
                         for place in places:
                             if len(results) >= MAX_RESULTS: break
                             results.append(AsianOriginMatch(field, place))
+
+                results.sort(key=lambda x: x._context()['population'], reverse=True)
                 return results or None
         return None
 
