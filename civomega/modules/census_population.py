@@ -17,7 +17,7 @@ def find_places(p):
 
 SPECIFIC_HISPANIC_ORIGIN = { # table ID B03001
 	'b03001001': 'Total:',
-	'b03001002': 'Not Hispanic or Latino',
+	#'b03001002': 'Not Hispanic or Latino',
 	'b03001003': 'Hispanic or Latino', # cumulative
 	'b03001004': 'Mexican',
 	'b03001005': 'Puerto Rican',
@@ -50,8 +50,8 @@ SPECIFIC_HISPANIC_ORIGIN = { # table ID B03001
 }
 
 SPECIFIC_ASIAN_ORIGIN = { # table id = B02006
-    'b02006001': 'Total:',
-    'b02006002': 'Asian Indian',
+    'b02006001': 'Asian', #'Total:',
+    'b02006002': 'Indian (Asian)', #'Asian Indian',
     'b02006003': 'Bangladeshi',
     'b02006004': 'Cambodian',
     'b02006005': 'Chinese , except Taiwanese',
