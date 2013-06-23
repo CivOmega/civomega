@@ -13,3 +13,4 @@ app.config.from_envvar('DATAOMEGA_SETTINGS', silent=True)
 
 # import this so the REGISTRY updates
 from dataomega.modules import test_campaign_finance
+from dataomega import census
