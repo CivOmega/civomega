@@ -1,12 +1,30 @@
 {%extends "layout.html" %}
 
+
+{% block scripts %}
+  <script type="text/javascript">
+    $(function() {
+      $("#question-form").submit(function() {
+        $("#results").load(
+          "{{url_for('ask')}}",
+          $("#question-form").serialize()
+        )
+        return false;
+      })
+    })
+  </script>
+{% endblock %}
+
 {% block content %}
   <div class="row">
     <div class="span12">
-      <form class="form-search" action="{{url_for('ask')}}" method='GET'>
-        <input type="text" class="span10 input input-xxlarge" name="question" placeholder="Why are there lobbyists in my bedroom?">
-        <input type="submit" class="span2 btn btn-primary" value="Ask!">
+      <form id="question-form" class="form-search" action="{{url_for('ask')}}" method='GET'>
+        <input id="question" type="text" class="span10 input input-xxlarge" name="question" placeholder="Why are there lobbyists in my bedroom?">
+        <input id="ask" type="submit" class="span2 btn btn-primary" value="Ask!">
       </form>
+    </div>
+    <div class="span12">
+      <div id="results"></div>
     </div>
   </div>
 {% endblock %}
