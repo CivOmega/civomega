@@ -5,21 +5,22 @@ import unittest
 from dataomega.match import Match
 from dataomega.parser import Parser
 
-
+# dumb example, flat database of campaign contributions in one year
 AWESOME_DATABASE = {
     "Rick Perry": {
         "contributors": [
-            "Texans for Perry",
-            "Texans who are really for Perry",
+            ("Texans for Perry", 1238458),
+            ("Texans who are really for Perry", 1584830),
+            ("Americans for Other Stuff", 500)
         ],
-        "money": "Bazillion",
+        "total_money_raised": 1238458+1584830+500 # just here as a sanity check
     },
     "David Dewhurst": {
         "contributors": [
-            "Texans for Dewhurst",
-            "Texans who are really for Dewhurst",
+            ("Texans for Dewhurst", 58383),
+            ("Texans who are really for Dewhurst", 2831284)
         ],
-        "money": "Gajillion",
+        "total_money_raised": 58383+2831284 # just here as a sanity check
     }
 }
 
@@ -38,10 +39,11 @@ class MoneyRaisedParser(Parser):
 
 class MoneyRaisedMatch(Match):
     def extract(self):
-        self.money = AWESOME_DATABASE[self.data['filer']]['money']
+        contributors = AWESOME_DATABASE[self.data['filer']]['contributors']
+        self.total_money_raised = sum(map(lambda x: x[1], contributors))
 
     def as_json(self):
-        return json.dumps({"raised": self.money})
+        return json.dumps({"raised": self.total_money_raised})
 
 
 class ContributorParser(Parser):
@@ -63,8 +65,8 @@ class ContributorsListMatch(Match):
 
     def extract(self):
         if self.data['filer'] in AWESOME_DATABASE:
-            filer = AWESOME_DATABASE[self.data['filer']]
-            self.contributors = filer['contributors']
+            contributors = AWESOME_DATABASE[self.data['filer']]['contributors']
+            self.contributors = map(lambda x: x[0], contributors)
 
     def as_html(self):
         if not self.contributors:
@@ -108,12 +110,12 @@ class TestMoneyRaisedParser(unittest.TestCase):
     def test_can_find_money_raised_for_perry(self):
         result = self.matcher.search("How much money has Rick Perry raised")
         data = json.loads(result.as_json())
-        self.assert_(AWESOME_DATABASE['Rick Perry']['money'] == data["raised"])
+        self.assert_(AWESOME_DATABASE['Rick Perry']['total_money_raised'] == data["raised"])
 
     def test_can_find_money_raised_for_dewhurst(self):
         result = self.matcher.search("How much money has David Dewhurst raised")
         data = json.loads(result.as_json())
-        self.assert_(AWESOME_DATABASE['David Dewhurst']['money'] == data["raised"])
+        self.assert_(AWESOME_DATABASE['David Dewhurst']['total_money_raised'] == data["raised"])
 
     def test_returns_none_for_no_match(self):
         result = self.matcher.search("How much money didn't Rick Perry raise")

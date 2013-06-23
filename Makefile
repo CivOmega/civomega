@@ -9,3 +9,5 @@ install:
 run:
 	python dataomega/web.py
 
+test:
+	nosetests
