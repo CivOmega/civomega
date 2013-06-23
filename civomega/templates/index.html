@@ -36,7 +36,7 @@
           }
           return b;
         })(window.location.search.substr(1).split('&'));
-        if (!!(qs['q'])) {
+        if (!!(qs['q']) && (qs['q'] != '')) {
           console.log(qs['q']);
           $("#question").val(qs['q']);
           $("#question-form").submit();
@@ -46,7 +46,6 @@
 
       window.onpopstate = function(event) {
         read_qs();
-        trigger_search();
       };
       $(".example-question").click(function() {
         $("#question").val($(this).text());
