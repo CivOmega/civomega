@@ -1,8 +1,8 @@
-from dataomega import Parser, Match
+from civomega import Parser, Match
 from jinja2 import Environment, PackageLoader
-from dataomega.registry import REGISTRY
+from civomega.registry import REGISTRY
 
-env = Environment(loader=PackageLoader('dataomega', 'templates'))
+env = Environment(loader=PackageLoader('civomega', 'templates'))
 
 import re
 import json
@@ -32,10 +32,10 @@ class SimpleBillSearchMatch(Match):
         url = 'http://congress.api.sunlightfoundation.com/bills?apikey=0b32a0061bdd4868b2b7cec4ec765add&query=%s' % noun
         resp = requests.get(url)
         self.data = resp.json()
-        
+
     def as_json(self):
         return json.dumps(self.data)
-        
+
     def as_html(self):
         template = env.get_template('bill_search/simple_search.html')
         return template.render(**self.data)

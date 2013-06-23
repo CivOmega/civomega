@@ -1,6 +1,6 @@
 import unittest
 import json
-from dataomega.modules.census_population import SimpleCensusParser
+from civomega.modules.census_population import SimpleCensusParser
 
 class TestSimpleCensusParser(unittest.TestCase):
     def setUp(self):

@@ -1,1 +1,1 @@
-web: gunicorn dataomega.web:app
+web: gunicorn civomega.web:app

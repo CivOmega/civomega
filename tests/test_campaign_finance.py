@@ -2,8 +2,8 @@ import json
 import re
 import unittest
 
-from dataomega.match import Match
-from dataomega.parser import Parser
+from civomega.match import Match
+from civomega.parser import Parser
 
 # dumb example, flat database of campaign contributions in one year
 AWESOME_DATABASE = {

@@ -1,8 +1,8 @@
-from dataomega import Parser, Match
+from civomega import Parser, Match
 from jinja2 import Environment, PackageLoader
-from dataomega.registry import REGISTRY
+from civomega.registry import REGISTRY
 
-env = Environment(loader=PackageLoader('dataomega', 'templates'))
+env = Environment(loader=PackageLoader('civomega', 'templates'))
 
 import re
 import json
@@ -81,7 +81,7 @@ class HispanicOriginMatch(Match):
         url = 'http://api.censusreporter.org/1.0/acs2011_5yr/B03001?geoids=%s' % self.geoid
         resp = requests.get(url)
         self.data = resp.json()
-        
+
     def _context(self):
         return {
             'place': self.place,
@@ -91,7 +91,7 @@ class HispanicOriginMatch(Match):
         }
     def as_json(self):
         return json.dumps(self._context())
-        
+
     def as_html(self):
         template = env.get_template('census/b03001.html')
         return template.render(**self._context())

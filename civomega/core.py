@@ -2,7 +2,7 @@ import logging
 
 from flask import Flask
 
-from dataomega import default_settings
+from civomega import default_settings
 
 logging.basicConfig(level=logging.INFO)
 
@@ -12,6 +12,6 @@ app.config.from_envvar('DATAOMEGA_SETTINGS', silent=True)
 
 
 # import this so the REGISTRY updates
-from dataomega.modules import test_campaign_finance
-from dataomega.modules import census_population
-from dataomega.modules import bill_search
+from civomega.modules import test_campaign_finance
+from civomega.modules import census_population
+from civomega.modules import bill_search

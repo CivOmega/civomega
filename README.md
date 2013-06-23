@@ -5,7 +5,7 @@ Ask questions against government data.
 
 ## Code Overview
 
-See `dataomega/match.py` and `dataomega/parser.py`. Also see
+See `civomega/match.py` and `civomega/parser.py`. Also see
 `tests/test_campaign_finance.py`, which contains example implementations of
 *Parsers* and *Matchers*.
 

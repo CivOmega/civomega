@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-setup(name='dataomega',
+setup(name='civomega',
       version='0.1',
       description="",
       long_description="",
