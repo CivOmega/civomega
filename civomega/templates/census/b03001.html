@@ -1,4 +1,5 @@
-<p>Population {% if label %}of <i>{{ label }}</i>
-   origin {% endif %}in <i>{{ place.name }}</i>:<br>
-   <b>{{ '{:,.0f}'.format(population) }}</b>
-</p>
+<p><b style="font-size:36px">{{ '{:,.0f}'.format(population) }}</b><br>
+   Population {% if label %}of <em>{{ label }}</em>
+   origin {% endif %}in <em>{{ place.name }}</em>.</p>
+
+<p><em>Data provided by the <a href="http://www.census.gov/">United States Census Bureau</a> and <a href="http://censusreporter.org/">CensusReporter</a>.</em></p>
