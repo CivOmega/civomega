@@ -77,7 +77,6 @@ class ContributorsListMatch(Match):
         return r
 
     def as_json(self):
-        print self.contributors
         return json.dumps(self.contributors) if self.contributors else None
 
 
