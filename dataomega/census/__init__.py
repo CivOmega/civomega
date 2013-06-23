@@ -4,6 +4,9 @@ import re
 import json
 import requests
 
+from jinja2 import Environment, PackageLoader
+env = Environment(loader=PackageLoader('dataomega', 'templates'))
+
 SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)(?P<noun>.+)\s+in\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
 
 def find_places(p):
@@ -63,7 +66,7 @@ class SimpleCensusParser(Parser):
         return None
 
 class HispanicOriginMatch(Match):
-    template = ""
+    template = "census/b03001.html"
     """docstring for SimpleCensusMatch"""
     def __init__(self, field, places):
         self.table = 'B03001'
@@ -76,15 +79,19 @@ class HispanicOriginMatch(Match):
         resp = requests.get(url)
         self.data = resp.json()
         
-    def as_json(self):
-        d = {
+    def _context(self):
+        return {
             'place': self.place,
             'population': self.data[self.geoid][self.field],
             'full_data': self.data[self.geoid],
             'other_places': self.other_places
         }
-        return json.dumps(d)
+        
+    def as_json(self):
+        return json.dumps(self._context())
         
     def as_html(self):
-        pass
+        template = env.get_template(self.template)
+        return template.render(**self.context())
+        
     
