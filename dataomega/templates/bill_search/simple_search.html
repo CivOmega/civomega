@@ -1,0 +1,24 @@
+
+</p>{{ count }} results total.  Here are the first {{ results|length }}:</p>
+
+<table>
+	<tr>
+		<th style="width: 150px;">Bill</th>
+		<th>Title</th>
+		<th style="width: 120px;">Introduced</th>
+	</tr>
+{% for item in results %}
+	<tr>
+		<td><a href="{{item.urls.congress}}" target="_blank">{{ item.bill_id }}</a></td>
+		<td>
+			{% if item.short_title is none %}
+				{{ item.official_title }}
+			{% else %}
+				{{ item.short_title }}
+			{% endif %}
+		</td>
+		<td>{{ item.introduced_on }}</td>
+	</tr>
+{% endfor %}
+</table>
+<p><em>Data provided by the <a href="http://sunlightfoundation.com">Sunlight Foundation</a></em></p>
