@@ -11,7 +11,21 @@ log = logging.getLogger(__name__)
 
 @app.route("/ask")
 def ask():
-    return request.args.get('question')
+    q = request.args.get('question')
+
+    search_results = []
+    for parser_id in REGISTRY.parsers:
+        parser = REGISTRY.parsers[parser_id]()
+        search = parser.search(q)
+        if search != None:
+            search_results.append(search)
+
+    out = "<h1>%s</h1>" % q
+    for r in search_results:
+        out += "<div>%s</div>" % r.as_html()
+
+    return out
+
 
 
 @app.route("/")
