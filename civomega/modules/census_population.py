@@ -8,7 +8,7 @@ import re
 import json
 import requests
 
-SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)(?P<noun>.+)\s+in\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
+SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)(?P<noun>.+?)\s+(?:live in|are in|in)\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
 
 def find_places(p):
     url = 'http://api.censusreporter.org/1.0/geo/search?prefix=%s' % p
