@@ -35,11 +35,13 @@ class SimpleWhiteHouseLogSearchParser(Parser):
 class VisitorWhiteHouseLogSearchParser(Parser):
     def search(self, s):
         # filters for keywords before breaking out the regex brass knuckles
-        if s.find('White House') != -1 and VISITOR_PATTERN.match(s):
-            d = VISITOR_PATTERN.match(s).groupdict()
-            # figure out which table for noun
-            names = d['names'].strip().split()
-            return VisitorWhiteHouseLogSearchMatch(names)
+        if s.find('White House') != -1:
+            m = VISITOR_PATTERN.match(s)
+            if m:
+                d = m.groupdict()
+                # figure out which table for noun
+                names = d['names'].strip().split()
+                return VisitorWhiteHouseLogSearchMatch(names)
         return None
 
 
@@ -62,15 +64,19 @@ class SimpleWhiteHouseLogSearchMatch(Match):
             item['description'] = item.get('description', '').lower()
 
             led = item.get('lastentrydate', '')
-            dd = DATE_PATTERN.match(led).groupdict()
-            year = int(dd['year'])
-            # yes, this is how I'm doing this
-            if year < 2000:
-                year += 2000
-            dt = datetime.datetime(year, int(dd['month']), int(dd['day']), int(dd['hour']), int(dd['minute']))
+            dd = DATE_PATTERN.match(led)
+            if dd:
+                dd = dd.groupdict()
+                year = int(dd['year'])
+                # yes, this is how I'm doing this
+                if year < 2000:
+                    year += 2000
+                dt = datetime.datetime(year, int(dd['month']), int(dd['day']), int(dd['hour']), int(dd['minute']))
 
-            # will fail on systems with non-GNU C libs (i.e. Windows) due to %- removal of zero-padding
-            item['lastentry_date'] = dt.strftime('%Y-%-m-%-d %-I:%M%p')
+                # will fail on systems with non-GNU C libs (i.e. Windows) due to %- removal of zero-padding
+                item['lastentry_date'] = dt.strftime('%Y-%-m-%-d %-I:%M%p')
+            else:
+                item['lastentry_date'] = led
 
         return data
 
