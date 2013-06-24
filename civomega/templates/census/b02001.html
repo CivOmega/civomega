@@ -6,7 +6,7 @@ table.population-table tr td.census-value { text-align: right; }
 <p><b style="font-size:36px">{{ '{:,.0f}'.format(population) }}</b><br>
    Population {% if label %}of <em>{{ label }}</em>
    origin {% endif %}in <em>{{ place.name }}</em>.</p>
-
+{#
 <h3>Racial population of <i>{{ place.name }}</i></h3>
 <table class="population-table">
   <tr>
@@ -23,5 +23,6 @@ table.population-table tr td.census-value { text-align: right; }
   <tr><td class="census-label">{{ indent(2) }}Two races including Some other race</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02001009']) }}</td></tr>
   <tr><td class="census-label">{{ indent(2) }}Two races excluding Some other race, and three or more races</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02001010']) }}</td></tr>
 </table>
+#}
 <p><em>Source: American Community Survey 2007-2011, table B02001</em></p>
 <p><em>Data provided by the <a href="http://www.census.gov/">United States Census Bureau</a> and <a href="http://censusreporter.org/">CensusReporter</a>.</em></p>

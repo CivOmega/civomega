@@ -7,6 +7,7 @@ table.population-table tr td.census-value { text-align: right; }
    Population {% if label %}of <em>{{ label }}</em>
    origin {% endif %}in <em>{{ place.name }}</em>.</p>
 
+{#
 <h3>Asian-alone population of <i>{{ place.name }}</i> by selected groups</h3>
 <table class="population-table">
   <tr>
@@ -32,6 +33,7 @@ table.population-table tr td.census-value { text-align: right; }
   <tr><td class="census-label">{{ indent(1) }}Other Asian</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b02006018']) }}</td></tr>
   <tr><td class="census-label">{{ indent(1) }}Other Asian, not specified</td><td class="value">{{ '{:,.0f}'.format(full_data['b02006019']) }}</td></tr>
 </table>
+#}
 <p><em>Source: American Community Survey 2007-2011, table B02006<br>
 Data provided by the <a href="http://www.census.gov/">United States Census
 Bureau</a> and <a href="http://censusreporter.org/">CensusReporter</a>.</em></p>
