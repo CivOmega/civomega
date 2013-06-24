@@ -9,7 +9,9 @@ import json
 import requests
 import bisect
 
-SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)(?P<noun>.+?)\s+(?:live in|are in|in)\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
+SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)\s(?P<noun>.+?)\s+(?:live in|are in|in)\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
+
+AGE_PATTERN = re.compile('^\s*(?:how many|how much)\s(?P<age>\d{1,3})\syear\solds\s+(?:live in|are in|in)\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
 
 def find_places(p):
     url = 'http://api.censusreporter.org/1.0/geo/search?prefix=%s' % p
@@ -160,6 +162,20 @@ SEX_AGE = { # table id B01001
     }
 }
 
+
+def age_range_for_age(age):
+    min_age = 0
+    max_age = 0
+    last_age = -1
+    for next_age in SEX_AGE['key_ages']:
+        if next_age > age:
+            min_age = last_age
+            max_age = next_age
+            break
+        last_age = next_age
+
+    return (min_age, max_age)
+
 class SimpleCensusParser(Parser):
     def search(self, s):
         if SIMPLE_PATTERN.match(s):
@@ -193,11 +209,11 @@ class SimpleCensusParser(Parser):
 
 class SexAgeCensusParser(Parser):
     def search(self, s):
+        results = []
         if SIMPLE_PATTERN.match(s):
             d = SIMPLE_PATTERN.match(s).groupdict()
             places = find_places(d['place'])
             if places:
-                results = []
                 noun = d['noun'].strip().lower()
                 if noun == "men":
                     for place in places:
@@ -212,8 +228,16 @@ class SexAgeCensusParser(Parser):
                         if len(results) >= MAX_RESULTS: break
                         results.append(SexAgeMatch(['male','female'], 0, 200, place))
                 results.sort(key=lambda x: x._context()['population'], reverse=True)
-                return results or None
-        return None
+        if AGE_PATTERN.match(s):
+            d = AGE_PATTERN.match(s).groupdict()
+            places = find_places(d['place'])
+            for place in places:
+                if len(results) >= MAX_RESULTS: break
+                age = int(d['age'].strip())
+                age_range = age_range_for_age(age)
+                results.append(SexAgeMatch(['male','female'], age_range[0], age_range[1], place))
+
+        return results or None
 
 
 class FieldInTableMatch(Match):
@@ -306,8 +330,12 @@ class SexAgeMatch(FieldInTableMatch):
 
         if len(self.sexes) == 1: # will not work when doing age buckets later...
             label = self.sexes[0]
-        else:
+        elif self.min_age == 0 and self.max_age == 200:
             label = "Total"
+        elif self.min_age >= 85 and self.max_age > 85:
+            label = "85+ year old"
+        else:
+            label = "%d-%d year old" % (self.min_age, self.max_age)
         return {
             'place': self.place,
             'population': total_population,
