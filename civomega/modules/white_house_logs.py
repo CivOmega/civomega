@@ -19,7 +19,7 @@ DATE_PATTERN = re.compile("(?P<month>\d*)/(?P<day>\d*)/(?P<year>\d*) (?P<hour>\d
 API_ENDPOINT = 'http://explore.data.gov/resource/644b-gaut.json?'
 
 # (When/how many times/why/who) did <name> visit (at|in) the White House?
-VISITOR_PATTERN = re.compile('^\s*(?:When|how\smany\stimes|why|who|has|)\s*(?:did|was|)\s*(?P<names>(\s?\w+)+)\s(?:visited|visit|visiting|been\sto)\s*(?:at|in|)\sthe\sWhite\sHouse?', re.IGNORECASE)
+VISITOR_PATTERN = re.compile('^\s*(?:When|how\smany\stimes|why|who|has|)\s*(?:did|was|has|)\s*(?P<names>(\s?\w+)+)\s(?:visited|visit|visiting|been\sto)\s*(?:at|in|)\sthe\sWhite\sHouse?', re.IGNORECASE)
 
 # TODO: Who visit(ed/s) Rahm Emanual at the White House?
 
