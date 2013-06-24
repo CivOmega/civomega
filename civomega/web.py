@@ -26,7 +26,7 @@ def ask():
     for r in search_results:
         out += "<div class='result'>%s</div>" % r.as_html()
     if len(search_results) == 0:
-        out += "<div>We don't understand the question yet, but that should change eventually.</div>"
+        out += "<div class='error'>We don't understand the question yet, but that should change eventually.</div>"
 
     return out
 

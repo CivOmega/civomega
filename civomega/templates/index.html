@@ -5,11 +5,19 @@
   <script type="text/javascript">
     $(function() {
       $("#question-form").submit(function() {
+        $("#error").hide();
         $("#spinner").show();
         $("#results").load(
           "{{url_for('ask')}}",
           $("#question-form").serialize(),
-          function() {
+          function(response, status, xhr) {
+            if (status == "error") {
+              $("#error").show();
+              //var msg = "Sorry but there was an error finding your answer: ";
+              //$("#error").html(msg + xhr.status + " " + xhr.statusText);
+              var msg = "Sorry but there was an error finding your answer. The data source for this question might be having issues; please try again in a few minutes.";
+              $("#error").html(msg);
+            }
             $("#spinner").hide();
           }
         )
@@ -82,6 +90,7 @@
         </p>
     </div>
     <div class="span12">
+      <div id="error"></div>
       <div id="results"></div>
     </div>
   </div>
