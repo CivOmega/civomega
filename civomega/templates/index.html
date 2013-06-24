@@ -4,6 +4,7 @@
 {% block scripts %}
   <script type="text/javascript">
     $(function() {
+      // Handle form submit AJAXyness
       $("#question-form").submit(function() {
         $("#error").hide();
         $("#spinner").show();
@@ -21,19 +22,28 @@
             $("#spinner").hide();
           }
         )
+        update_url();
         return false;
       });
+
+      // A JS function trigger to fire off AJAX search (when loading a page with "?q=..." and automatically loading that search)
       var trigger_search = function() {
         $("#question-form").submit();
       };
-      var update_history = function() {
-        if (typeof(history.pushState) !== "undefined") {
+      // Trigger to update URL
+      var update_url = function() {
+        var current_qs = $.param(get_qs());
+        var new_qs =  $.param({
+          'q': $("#question").val()
+        });
+        if ((current_qs != new_qs) && (typeof(history.pushState) !== "undefined")) {
           history.pushState({}, null, "/?" + $.param({
             'q': $("#question").val()
           }));
         }
       };
-      var read_qs = function() {
+      // Reads "?q=..." if we want to auto-load
+      var get_qs = function() {
         var qs = (function(a) {
           if (a == "") return {};
           var b = {};
@@ -44,28 +54,37 @@
           }
           return b;
         })(window.location.search.substr(1).split('&'));
+        return qs;
+      };
+      // When coming back to this page from "back" button
+      window.onpopstate = function(event) {
+        var qs = get_qs();
+        $("#error").hide();
         if (!!(qs['q']) && (qs['q'] != '')) {
-          console.log(qs['q']);
           $("#question").val(qs['q']);
           $("#question-form").submit();
+        } else {
+          $("#question").val("");
+          $("#results").html("");
         }
       };
 
-
-      window.onpopstate = function(event) {
-        read_qs();
-      };
+      // When firing an example search.
       $(".example-question").click(function() {
         $("#question").val($(this).text());
         trigger_search();
-        update_history();
         return false;
       });
 
-      if (!!($("#question").val()) && typeof(history.replaceState) !== "undefined") {
-        history.replaceState({}, null, "/?" + $.param({
-          'q': $("#question").val()
-        }));
+      if (typeof(history.replaceState) !== "undefined") {
+        var val = $("#question").val();
+        if (!!val) {
+          history.replaceState({}, null, "/?" + $.param({
+            'q': val
+          }));
+        } else {
+          history.replaceState({}, null, "/");
+        }
       }
     });
   </script>
