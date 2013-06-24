@@ -1,0 +1,39 @@
+{% if results|length == 0 %}
+  <p>We couldn't find any visits.</p>
+{% else %}
+  {% if name != '' %}
+    <p style="font-size:110%">{{ name }} visited the White House at least {{ results|length }} times. Here are the most recently released {{ results|length }}:</p>
+  {% else %}
+    <p>Lots of people visit the White House.  Here are the most recently released {{ results|length }}:</p>
+  {% endif %}
+
+  <table class="tablesorter">
+  	<thead>
+  		<tr>
+        {% if name == '' %}
+  			   <th style="width: 200px;">Visitor</th>
+        {% endif %}
+        <th style="width: 200px;">Visiting</th>
+        <th>Description</th>
+  			<th style="width: 150px;">Entered</th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  	{% for item in results %}
+  		<tr>
+        {% if name == '' %}
+  			   <td>{{ item.visitor_name }}</td>
+        {% endif %}
+
+        <td>{{ item.visited_name }}</td>
+        <td>{{ item.description }}</td>
+  			<td>{{ item.lastentry_date }}</td>
+  		</tr>
+  	{% endfor %}
+  	</tbody>
+  </table>
+  <script type="text/javascript">
+  	$(".tablesorter").tablesorter();
+  </script>
+  <p><em>Data provided by the <a href="http://www.whitehouse.gov/briefing-room/disclosures/visitor-records">White House</a></em></p>
+{% endif %}
