@@ -15,7 +15,7 @@
               $("#error").show();
               //var msg = "Sorry but there was an error finding your answer: ";
               //$("#error").html(msg + xhr.status + " " + xhr.statusText);
-              var msg = "Sorry but there was an error finding your answer. The data source for this question might be having issues; please try again in a few minutes.";
+              var msg = "Sorry but there was an error finding your answer.<br>The data source for this question might be having issues; please try again in a few minutes.";
               $("#error").html(msg);
             }
             $("#spinner").hide();
@@ -76,7 +76,7 @@
     <div class="span12" style="margin-bottom:0">
       <form id="question-form" class="form-search" action="{{url_for('ask')}}" method='GET'>
         <img src="/static/img/ajax_wait_16.gif" id="spinner"/>
-        <input id="question" type="text" class="span10 input input-xxlarge" name="question" placeholder="Why are there lobbyists in my bedroom?">
+        <input id="question" type="text" class="span10 input input-xxlarge" name="question" placeholder="What bills are about green energy?">
         <input id="ask" type="submit" class="span2 btn btn-primary" value="Ask!">
       </form>
     </div>
