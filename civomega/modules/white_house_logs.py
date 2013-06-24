@@ -11,7 +11,7 @@ import string
 import datetime
 
 # Who visit(s/ed) the White House?
-SIMPLE_PATTERN = re.compile('^\s*Who\svisit(?:ed|s)\sthe\sWhite\sHouse?', re.IGNORECASE)
+SIMPLE_PATTERN = re.compile('^\s*who\svisit(?:ed|s)\sthe\swhite\shouse', re.IGNORECASE)
 
 # necessary because datetime doesn't support non-zero padded numbers in strptime
 DATE_PATTERN = re.compile("(?P<month>\d*)/(?P<day>\d*)/(?P<year>\d*) (?P<hour>\d*):(?P<minute>\d*)")
@@ -19,7 +19,7 @@ DATE_PATTERN = re.compile("(?P<month>\d*)/(?P<day>\d*)/(?P<year>\d*) (?P<hour>\d
 API_ENDPOINT = 'http://explore.data.gov/resource/644b-gaut.json?'
 
 # (When/how many times/why/who) did <name> visit (at|in) the White House?
-VISITOR_PATTERN = re.compile('^\s*(?:When|how\smany\stimes|why|who|has|)\s*(?:did|was|has|)\s*(?P<names>(\s?\w+)+)\s(?:visited|visit|visiting|been\sto)\s*(?:at|in|)\sthe\sWhite\sHouse?', re.IGNORECASE)
+VISITOR_PATTERN = re.compile('^\s*(?:when|how\smany\stimes|why|who|has|)\s*(?:did|was|has|)\s*(?P<names>(\s?\w+)+)\s(?:visited|visit|visiting|been\sto)\s*(?:at|in|)\sthe\swhite\shouse', re.IGNORECASE)
 
 # TODO: Who visit(ed/s) Rahm Emanual at the White House?
 
@@ -27,7 +27,7 @@ VISITOR_PATTERN = re.compile('^\s*(?:When|how\smany\stimes|why|who|has|)\s*(?:di
 class SimpleWhiteHouseLogSearchParser(Parser):
     def search(self, s):
         # filters for keywords before breaking out the regex brass knuckles
-        if s.find('White House') != -1 and SIMPLE_PATTERN.match(s):
+        if s.lower().find('white house') != -1 and SIMPLE_PATTERN.match(s):
             return SimpleWhiteHouseLogSearchMatch()
         return None
 
@@ -35,7 +35,7 @@ class SimpleWhiteHouseLogSearchParser(Parser):
 class VisitorWhiteHouseLogSearchParser(Parser):
     def search(self, s):
         # filters for keywords before breaking out the regex brass knuckles
-        if s.find('White House') != -1:
+        if s.lower().find('white house') != -1:
             m = VISITOR_PATTERN.match(s)
             if m:
                 d = m.groupdict()
@@ -95,7 +95,7 @@ class VisitorWhiteHouseLogSearchMatch(SimpleWhiteHouseLogSearchMatch):
         firstname = names[0][0].capitalize() + names[0][1:]
         lastname = names[-1][0].capitalize() + names[-1][1:]
 
-        print(firstname + " " + lastname)
+        #print(firstname + " " + lastname)
 
         url = API_ENDPOINT
         if firstname.strip() != '':
