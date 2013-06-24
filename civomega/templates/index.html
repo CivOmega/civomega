@@ -56,8 +56,7 @@
         })(window.location.search.substr(1).split('&'));
         return qs;
       };
-      // When coming back to this page from "back" button
-      window.onpopstate = function(event) {
+      var load_from_qs = function() {
         var qs = get_qs();
         $("#error").hide();
         if (!!(qs['q']) && (qs['q'] != '')) {
@@ -68,6 +67,9 @@
           $("#results").html("");
         }
       };
+      // When coming back to this page from "back" button
+      window.onpopstate = function(event) { load_from_qs(); };
+      load_from_qs();
 
       // When firing an example search.
       $(".example-question").click(function() {
@@ -101,10 +103,11 @@
     </div>
     <div class="span12">
         <p style="margin-top:0">Try these:
-            "<a href="#" class="example-question">What legislative bills are about abortion?</a>",
-            "<a href="#" class="example-question">What bills did Eric Cantor sponsor?</a>",<br>
-            "<a href="#" class="example-question">How many Dominicans live in New York?</a>",
-            "<a href="#" class="example-question">Who is talking about climate change?</a>"
+            "<a href="/?q=What+legislative+bills+are+about+abortion%3f" class="example-question">What legislative bills are about abortion?</a>",
+            "<a href="/?q=What+bills+did+Eric+Cantor+sponsor%3f" class="example-question">What bills did Eric Cantor sponsor?</a>",<br>
+            "<a href="/?q=How+many+Dominicans+live+in+New+York%3f" class="example-question">How many Dominicans live in New York?</a>",
+            "<a href="/?q=Who+is+talking+about+climate+change%3f" class="example-question">Who is talking about climate change?</a>",
+            "<a href="/?q=Who+visited+the+White+House%3f" class="example-question">Who visited the White House?</a>"
         </p>
     </div>
     <div class="span12">
