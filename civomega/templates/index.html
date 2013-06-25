@@ -8,6 +8,8 @@
       $("#question-form").submit(function() {
         $("#error").hide();
         $("#spinner").show();
+
+        $("#results").html("<div class='result'>Thinking...</div>");
         $("#results").load(
           "{{url_for('ask')}}",
           $("#question-form").serialize(),
