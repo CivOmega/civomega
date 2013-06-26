@@ -17,3 +17,4 @@ from civomega.modules import census_population
 from civomega.modules import bill_search
 from civomega.modules import capitol_words
 from civomega.modules import white_house_logs
+from civomega.modules import werewolf

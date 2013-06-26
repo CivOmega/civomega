@@ -6,7 +6,7 @@
 <p><b style="font-size:36px">{{ '{:,.0f}'.format(population) }}</b><br>
    Population {% if label %}of <em>{{ label }}</em>
    origin {% endif %}in <em title="{{ place.geoid }}">{{ place.name }}</em>.</p>
-
+{#
 <h3>Population of <i>{{ place.name }}</i> by specific hispanic origin</h3>
 <table class="population-table">
   <tr>
@@ -44,7 +44,7 @@
   <tr><td class="census-label">{{ indent(2) }}Spanish American</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b03001030']) }}</td></tr>
   <tr><td class="census-label">{{ indent(2) }}All other Hispanic or Latino</td><td class="census-value">{{ '{:,.0f}'.format(full_data['b03001031']) }}</td></tr>
 </table>
-
+#}
 <p><em>Source: American Community Survey 2007-2011, table B03001<br>
 Data provided by the <a href="http://www.census.gov/">United States Census Bureau</a>
 and <a href="http://censusreporter.org/">CensusReporter</a>.</em></p>

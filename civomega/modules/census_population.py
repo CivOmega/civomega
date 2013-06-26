@@ -9,7 +9,9 @@ import json
 import requests
 import bisect
 
-SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)(?P<noun>.+?)\s+(?:live in|are in|in)\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
+SIMPLE_PATTERN = re.compile('^\s*(?:how many|how much|which are|which)\s(?P<noun>.+?)\s+(?:live in|are in|in)\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
+
+AGE_PATTERN = re.compile('^\s*(?:how many|how much)\s(?P<age>\d{1,3})\syear\solds\s+(?:live in|are in|in)\s+(?P<place>[\w\s]+)\??',re.IGNORECASE)
 
 def find_places(p):
     url = 'http://api.censusreporter.org/1.0/geo/search?prefix=%s' % p
@@ -110,7 +112,7 @@ SEX_AGE = { # table id B01001
     ],
     'male': {
         0: "b01001003", # means 0 to 4 years old
-        5: "b01001004", 
+        5: "b01001004",
         10: "b01001005",
         15: "b01001006",
         18: "b01001007",
@@ -134,8 +136,8 @@ SEX_AGE = { # table id B01001
         85: "b01001049"
     },
     'female': {
-        0: "b01001027", 
-        5: "b01001028", 
+        0: "b01001027",
+        5: "b01001028",
         10: "b01001029",
         15: "b01001030",
         18: "b01001031",
@@ -159,6 +161,20 @@ SEX_AGE = { # table id B01001
         85: "b01001049"
     }
 }
+
+
+def age_range_for_age(age):
+    min_age = 0
+    max_age = 0
+    last_age = -1
+    for next_age in SEX_AGE['key_ages']:
+        if next_age > age:
+            min_age = last_age
+            max_age = next_age
+            break
+        last_age = next_age
+
+    return (min_age, max_age)
 
 class SimpleCensusParser(Parser):
     def search(self, s):
@@ -193,18 +209,35 @@ class SimpleCensusParser(Parser):
 
 class SexAgeCensusParser(Parser):
     def search(self, s):
+        results = []
         if SIMPLE_PATTERN.match(s):
             d = SIMPLE_PATTERN.match(s).groupdict()
             places = find_places(d['place'])
             if places:
                 noun = d['noun'].strip().lower()
                 if noun == "men":
-                    return SexAgeMatch(['male'], 0, 200, places[0])
+                    for place in places:
+                        if len(results) >= MAX_RESULTS: break
+                        results.append(SexAgeMatch(['male'], 0, 200, place))
                 elif noun == "women":
-                    return SexAgeMatch(['female'], 0, 200, places[0])
+                    for place in places:
+                        if len(results) >= MAX_RESULTS: break
+                        results.append(SexAgeMatch(['female'], 0, 200, place))
                 elif noun == "people":
-                    return SexAgeMatch(['male','female'], 0, 200, places[0])
-        return None
+                    for place in places:
+                        if len(results) >= MAX_RESULTS: break
+                        results.append(SexAgeMatch(['male','female'], 0, 200, place))
+                results.sort(key=lambda x: x._context()['population'], reverse=True)
+        if AGE_PATTERN.match(s):
+            d = AGE_PATTERN.match(s).groupdict()
+            places = find_places(d['place'])
+            for place in places:
+                if len(results) >= MAX_RESULTS: break
+                age = int(d['age'].strip())
+                age_range = age_range_for_age(age)
+                results.append(SexAgeMatch(['male','female'], age_range[0], age_range[1], place))
+
+        return results or None
 
 
 class FieldInTableMatch(Match):
@@ -216,7 +249,7 @@ class FieldInTableMatch(Match):
         self.place = place
         self.geoid = place['full_geoid']
         self.load_table_data()
-        
+
     def load_table_data(self):
         # we would need to get some data
         url = 'http://api.censusreporter.org/1.0/acs2011_5yr/%s?geoids=%s' % (self.table,self.geoid)
@@ -237,7 +270,7 @@ class FieldInTableMatch(Match):
     def as_html(self):
         return env.get_template(self.template).render(**self._context())
 
-        
+
 class HispanicOriginMatch(FieldInTableMatch):
     template = 'census/b03001.html'
     table = 'B03001'
@@ -250,7 +283,7 @@ class HispanicOriginMatch(FieldInTableMatch):
         d = super(HispanicOriginMatch,self)._context()
         d['field_labels'] = SPECIFIC_HISPANIC_ORIGIN
         return d
-        
+
 class AsianOriginMatch(FieldInTableMatch):
     template = 'census/b02006.html'
     table = 'B02006'
@@ -266,49 +299,50 @@ class SexAgeMatch(FieldInTableMatch):
     def __init__(self, sexes, min_age, max_age, place):
         super(SexAgeMatch, self).__init__(None, place)
         self.sexes = sexes
-        self.added_fields = []
         self.min_age = min_age
         self.max_age = max_age
         self.returned_min_age = 200
         self.returned_max_age = 0
 
     def _context(self):
-        self.total_population = 0
+        total_population = 0
+        added_fields = []
         for sex in self.sexes:
             for age in range(self.min_age, self.max_age):
-                self._add_bucket(sex, age)
-                
+                i = bisect.bisect_left(SEX_AGE['key_ages'], age)
+
+                possible_min = SEX_AGE['key_ages'][i]
+                possible_max = SEX_AGE['key_ages'][i+1] - 1
+
+                if possible_min < self.returned_min_age:
+                    self.returned_min_age = possible_min
+                if possible_max > self.returned_max_age:
+                    self.returned_max_age = possible_max
+
+                x = SEX_AGE['key_ages'][i]
+                if x > 85:
+                    x = 85
+
+                field = SEX_AGE[sex][x]
+                if field not in added_fields:
+                    added_fields.append(field)
+                    total_population += self.data[self.geoid][field]
+
         if len(self.sexes) == 1: # will not work when doing age buckets later...
             label = self.sexes[0]
-        else:
+        elif self.min_age == 0 and self.max_age == 200:
             label = "Total"
+        elif self.min_age >= 85 and self.max_age > 85:
+            label = "85+ year old"
+        else:
+            label = "%d-%d year old" % (self.min_age, self.max_age)
         return {
             'place': self.place,
-            'population': self.total_population,
+            'population': total_population,
             'age_range': (self.returned_min_age, self.returned_max_age),
             'full_data': self.data[self.geoid],
             'label': label
         }
-
-    def _add_bucket(self, sex, age):
-        i = bisect.bisect_left(SEX_AGE['key_ages'], age)
-        
-        possible_min = SEX_AGE['key_ages'][i]
-        possible_max = SEX_AGE['key_ages'][i+1] - 1
-
-        if possible_min < self.returned_min_age:
-            self.returned_min_age = possible_min
-        if possible_max > self.returned_max_age:
-            self.returned_max_age = possible_max
-
-        x = SEX_AGE['key_ages'][i]
-        if x > 85:
-            x = 85
-
-        field = SEX_AGE[sex][x]
-        if field not in self.added_fields:
-            self.added_fields.append(field)
-            self.total_population += self.data[self.geoid][field]
 
 class RaceMatch(FieldInTableMatch):
     template = 'census/b02001.html'
@@ -317,6 +351,6 @@ class RaceMatch(FieldInTableMatch):
     def __init__(self, field, place, label):
         super(RaceMatch,self).__init__(field, place)
         self.label = label
-    
+
 REGISTRY.add_parser('simple_census_parser', SimpleCensusParser)
 REGISTRY.add_parser('sex_age_census_parser', SexAgeCensusParser)
