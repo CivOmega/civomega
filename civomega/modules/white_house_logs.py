@@ -58,7 +58,8 @@ class SimpleWhiteHouseLogSearchMatch(Match):
             item['visitor_name'] = string.capwords(item.get('namefirst', ''))
             item['visitor_name'] += " " + string.capwords(item.get('namelast', ''))
             item['visited_name'] = string.capwords(item.get('visitee_namefirst', ''))
-            item['visited_name'] += " " + string.capwords(item.get('visitee_namelast', ''))
+            if string.capwords(item.get('visitee_namelast', '')) != 'And':
+                item['visited_name'] += " " + string.capwords(item.get('visitee_namelast', ''))
             if item['visited_name'].rstrip().lstrip() == 'Potus':
                 item['visited_name'] = 'The President'
             item['description'] = item.get('description', '').lower()
@@ -74,7 +75,7 @@ class SimpleWhiteHouseLogSearchMatch(Match):
                 dt = datetime.datetime(year, int(dd['month']), int(dd['day']), int(dd['hour']), int(dd['minute']))
 
                 # will fail on systems with non-GNU C libs (i.e. Windows) due to %- removal of zero-padding
-                item['lastentry_date'] = dt.strftime('%Y-%-m-%-d %-I:%M%p')
+                item['lastentry_date'] = dt.strftime('%-m/%-d/%Y %-I:%M%p')
             else:
                 item['lastentry_date'] = led
 
