@@ -75,7 +75,7 @@ class SimpleWhiteHouseLogSearchMatch(Match):
                 dt = datetime.datetime(year, int(dd['month']), int(dd['day']), int(dd['hour']), int(dd['minute']))
 
                 # will fail on systems with non-GNU C libs (i.e. Windows) due to %- removal of zero-padding
-                item['lastentry_date'] = dt.strftime('%-m/%-d/%Y %-I:%M%p')
+                item['lastentry_date'] = dt.strftime('%-m/%-d/%Y %-I:%M %p')
             else:
                 item['lastentry_date'] = led
 

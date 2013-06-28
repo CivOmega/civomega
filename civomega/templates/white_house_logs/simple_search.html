@@ -33,7 +33,12 @@
   	</tbody>
   </table>
   <script type="text/javascript">
-  	$(".tablesorter").tablesorter();
+  	$(".tablesorter").tablesorter({
+      dateFormat : "mmddyyyy",
+      headers : {
+        2: { sorter: "shortDate" }
+      }
+    });
   </script>
   <p><em>Data provided by the <a href="http://www.whitehouse.gov/briefing-room/disclosures/visitor-records">White House</a></em></p>
 {% endif %}
