@@ -131,7 +131,7 @@ class VisitorWhiteHouseLogSearchMatch(SimpleWhiteHouseLogSearchMatch):
             else:
                 json = []
 
-            self.data = {'name': (name).lstrip(), 'results': resp2.json()}
+            self.data = {'name': (name).lstrip(), 'results': json}
 
 
 REGISTRY.add_parser('simple_white_house_log_search', SimpleWhiteHouseLogSearchParser)
