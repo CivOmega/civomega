@@ -4,15 +4,13 @@
   {% if name != '' %}
     <p style="font-size:110%">{{ name }} visited the White House at least {{ results|length }} times. Here are the most recently released {{ results|length }}:</p>
   {% else %}
-    <p>Lots of people visit the White House.  Here are the most recently released {{ results|length }}:</p>
+    <p style="font-size:110%">Lots of people visit the White House.  Here are the most recently released {{ results|length }}:</p>
   {% endif %}
 
   <table class="tablesorter">
   	<thead>
   		<tr>
-        {% if name == '' %}
-  			   <th style="width: 200px;">Visitor</th>
-        {% endif %}
+  			 <th style="width: 200px;">Visitor</th>
         <th style="width: 200px;">Visiting</th>
         <th>Description</th>
   			<th style="width: 150px;">Entered</th>
@@ -21,10 +19,7 @@
   	<tbody>
   	{% for item in results %}
   		<tr>
-        {% if name == '' %}
-  			   <td>{{ item.visitor_name }}</td>
-        {% endif %}
-
+  			<td>{{ item.visitor_name }}</td>
         <td>{{ item.visited_name }}</td>
         <td>{{ item.description }}</td>
   			<td>{{ item.lastentry_date }}</td>
