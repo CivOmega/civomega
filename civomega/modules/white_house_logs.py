@@ -55,6 +55,8 @@ class SimpleWhiteHouseLogSearchMatch(Match):
     def format_data(self, data):
         for item in data['results']:
             item['visitor_name'] = string.capwords(item.get('namefirst', ''))
+            if item.get('namemid', '') != '':
+                item['visitor_name'] += " " + item.get('namemid', '') + "."
             item['visitor_name'] += " " + string.capwords(item.get('namelast', ''))
             item['visited_name'] = string.capwords(item.get('visitee_namefirst', ''))
             if string.capwords(item.get('visitee_namelast', '')) != 'And':
