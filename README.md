@@ -10,108 +10,84 @@ This code is a prototype that came out of the [Civic Media Hackday][].  There mi
 [Civic Media Hackday]: http://www.eventbrite.com/event/6650197921
 
 
-## How does it work?
-CivOmega takes a question and attempts to parse it to find a match against the various data it knows about.  You create the parsers that determine if a question matches something you can provide with your data.
+## 2.X branch
 
-For example, imagine you wanted to know how much money the candidate Animated Unicorn raised.  You could search for it like this:
+See "2.X branch setup" (down below) first. Otherwise, none of this
+will work.
 
-    import civomega
-    result = civomega.search("How much much has Animated Unicorn raised?")
-    result.as_json() == '{"raised": 1010000}'
+### Running the web server locally
 
+```shell
+# cd into the repo, activate the virtualenv
+cd <path/to/civomega>
+source bin/activate
 
-So how's it all work?  You need a database, a parser that can determine if a question can be answered by a database, and the matches that can be returned.  Let's start with a *really* simple database that looks like this:
+python manage.py runserver
+```
 
-    AWESOME_DATABASE = {
-        "Cartoon Rabbit": {
-            "contributors": [
-                ("Citizens for a Rabbit-like tomorrow!", 100000),
-                ("Hopped Up Citizens", 2500000),
-            ],
-        },
-        "Animated Unicorn": {
-            "contributors": [
-                ("United for Unicorns", 1000000),
-                ("Citizens against Cartoon Rabbit", 10000),
-            ],
-        }
-    }
-
-You can see that the response you got back from your search came from adding all of the contributions to `Animated Unicorn`.  What you need to do next is parse the question to understand if there's even a possible match.
+The server should then be available at
+[127.0.0.1:8000](http://127.0.0.1:8000).
 
 
-### Creating a Parser
+## 2.X branch setup
 
-Now that you have a simple, in-memory database setup, you need to parse the question asked to determine whether you can possibly provide a match.  Let's stick with simple and create a regular-expression parser to do a simple match.
+You'll need Python, pip, and virtualenv. On Mac OS X, using Homebrew to install
+everything is recommended.
 
-    import re
-    import civomega
+### Installing Homebrew & Python dependencies
 
+```shell
+# Install Homebrew. (It's safe to run this even if you do have it
+# installed.)
+ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
 
-    class MoneyRaisedParser(civomega.Parser):
-        def __init__(self):
-            pattern = r'How much money has (?P<filer>([A-Z][a-z]*\s?)+) raised'
-            self.matcher = re.compile(pattern)
+# Make sure Homebrew is up to date & install the latest Python.
+brew update
+brew install python --with-brewed-openssl
 
-        def search(self, s):
-            match = self.matcher.search(s)
-            if match is None:
-                return None
-            return MoneyRaisedMatch(s, match.groupdict())
+# Check that you've got brew-installed Python 2.7.5:
+which python     # should be "/usr/local/bin/python"
+python --version # should be "Python 2.7.5"
 
-    civomega.site.register(MoneyRaisedParser)
+# Make sure the pip & virtualenv & stuff are the latest, too:
+pip install -UI setuptools pip virtualenv
+```
 
-This parser is pretty niave since it uses a simple [regular express][regex-problems], but it's a nice demo.  The `__init__` method configures the regular expression needed to do a match and `search` handles the actual matching.
+### Check out the repo & set it up
 
-You return `None` if you know you can't handle the question, otherwise you return either a Match object or a `list` of Match objects.
+```shell
+cd <wherever_you_want_the_repo_to_go>
+git clone https://github.com/mtigas/civomega.git
+cd civomega
 
-[regex-problems]: http://www.codinghorror.com/blog/2008/06/regular-expressions-now-you-have-two-problems.html
+# make sure you're using this branch
+git checkout 2.x
 
+# set it up as a virtualenv -- a self-contained python
+# app that doesn't affect your system or other Python-using
+# projects on your computer.
+virtualenv --no-site-packages .
 
-### Creating a Match
+# these settings further make sure that the CivOmega Python
+# repo doesn't confuse itself or other Python projects on your
+# system.
+echo "export PIP_RESPECT_VIRTUALENV=true" >> bin/activate
+echo "unset DJANGO_SETTINGS_MODULE" >> bin/activate
 
-Once you make it this far, you have a match that might have real data associated with it.  It's up to you to figure that out via your Match object.  Here's a simple implementation that interacts with the in-memory database above:
+# "activate" the virtualenv
+source bin/activate
 
-    class MoneyRaisedMatch(Match):
-        def extract(self):
-            if self.data['filer'] not in AWESOME_DATABASE:
-                contributors = []
-            else:
-                contributors = AWESOME_DATABASE[self.data['filer']]['contributors']
-            self.total_money_raised = sum([a[1] for a in contributors])
+# Tell pip to install Django & all the other requirements
+pip install -r requirements.txt
+```
 
-        def as_html(self):
-            return str(self.total_money_raised)
+### If you've already set up the repo
 
-        def as_json(self):
-            return json.dumps({"raised": self.total_money_raised})
+All you'll need to do is to `cd` into the repo and `source bin/activate`
+to make it so your Python is aware of all the CivOmega commands.
 
-Each `Match` object that you create needs to implement three methods:
-
-#### `extract`
-This method is called as soon as `self.search` and `self.data` are set.  `self.search` is the raw search string that the `Parser` thinks matched and `self.data` is the data it was able to extract.  In the case of your `MoneyRaisedParser` above, `self.data` is a dictionary of matching values in the regular expression.
-
-Keep in mind this is just an example, so don't get caught up on the implementation.  In a real-world example, `extract` would talk to an API or a database to determine the amount raised instead of doing everything in memory.
-
-#### `as_html`
-This should take the extracted data (if anything) and return it as a string that can be rendered as HTML.  This can be as simple or complex as you want.  This example returns a simple string, but you could build tables, lists, or whatever you want and return it.
-
-#### `as_json`
-This returns the seralized version of the match.  Again, there's no specified standard for what the data is.
-
-
-## Going beyond! (or We Need YOU!)
-
-The example parser and matches here are pretty basic at this point.  You can go as far as you want with your parser.  Want to do natural language processing and get creative?  Go for it.  The only requirement right now is to return something other than `None` when you find a match.
-
-But this isn't the end!  There's still a ton of work left to do and we need your help.  Here's a list of ideas that we've batted around:
-
-* Weight and order matches
-* Provide a JavaScript SDK for use outside of the demo
-* Parse the search term and provide data to `search` in addition to the raw data so you can determine possible matches more easily
-* Build up a library of parsers that work with open APIs
-
-
-## How do I install it?
-
-Using `pip`, you can install it by doing `pip install .` within the repository.  You can also do `pip install civomega`.
+If you update to a newer version in `git` and CivOmega stops working,
+you might need to update your local repo dependencies to whatever
+may have been updated in `requirements.txt`. To do this, make sure
+you've `source bin/activate`'d your repo and then you can run the
+`pip install -r requirements.txt` command again.
