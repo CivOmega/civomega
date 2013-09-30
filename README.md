@@ -22,11 +22,17 @@ will work.
 cd <path/to/civomega>
 source bin/activate
 
-python manage.py runserver
+# obviously replace "asdfasdfasdf" with your Sunlight Foundation
+# API key http://sunlightfoundation.com/api/
+SUNLIGHT_API_KEY=asdfasdfasdf python manage.py runserver
 ```
 
 The server should then be available at
 [127.0.0.1:8000](http://127.0.0.1:8000).
+
+(TODO: in the near future, using `SUNLIGHT_API_KEY` on the shell
+will be optional and also doable with the a settings file in the
+`civomega` directory.)
 
 
 ## 2.X branch setup
