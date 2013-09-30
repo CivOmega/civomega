@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='civomega',
-      version='0.1',
+      version='2.0-alpha.1', # http://semver.org/
       description="",
       long_description="",
       classifiers=[],
