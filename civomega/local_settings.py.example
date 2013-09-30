@@ -1,0 +1,6 @@
+# copy this file to "local_settings.py"
+# then make sure you have the following stuff set:
+
+#
+SUNLIGHT_API_KEY='YOUR_SUNLIGHT_API_KEY_HERE'
+

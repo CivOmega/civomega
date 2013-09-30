@@ -1,8 +1,6 @@
 from civomega import Parser, Match
-from jinja2 import Environment, PackageLoader
 from civomega.registry import REGISTRY
-
-env = Environment(loader=PackageLoader('civomega', 'templates'))
+from django.template import loader, Context
 
 import re
 import json
@@ -91,8 +89,8 @@ class SimpleWhiteHouseLogSearchMatch(Match):
         return json.dumps(self.data)
 
     def as_html(self):
-        template = env.get_template('white_house_logs/simple_search.html')
-        return template.render(**self.format_data(self.data))
+        template = loader.get_template('white_house_logs/simple_search.html')
+        return template.render(Context(self.format_data(self.data)))
 
 
 class VisitorWhiteHouseLogSearchMatch(SimpleWhiteHouseLogSearchMatch):

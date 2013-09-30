@@ -1,8 +1,6 @@
 from civomega import Parser, Match
-from jinja2 import Environment, PackageLoader
 from civomega.registry import REGISTRY
-
-env = Environment(loader=PackageLoader('civomega', 'templates'))
+from django.template import loader, Context
 
 import os
 import re
@@ -48,8 +46,8 @@ class SimpleBillSearchMatch(Match):
         return json.dumps(self.data)
 
     def as_html(self):
-        template = env.get_template('bill_search/simple_search.html')
-        return template.render(**self.data)
+        template = loader.get_template('bill_search/simple_search.html')
+        return template.render(Context(self.data))
 
 class SupportedBillSearchMatch(Match):
 
@@ -81,8 +79,8 @@ class SupportedBillSearchMatch(Match):
         return json.dumps(self.data)
 
     def as_html(self):
-        template = env.get_template('bill_search/simple_search.html')
-        return template.render(**self.data)
+        template = loader.get_template('bill_search/simple_search.html')
+        return template.render(Context(self.data))
 
 REGISTRY.add_parser('simple_bill_search', SimpleBillSearchParser)
 REGISTRY.add_parser('supported_bill_search', SupportBillSearchParser)

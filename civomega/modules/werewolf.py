@@ -1,15 +1,10 @@
 from civomega import Parser, Match
-from jinja2 import Environment, PackageLoader
 from civomega.registry import REGISTRY
 from random import Random
-from flask import request
+from django.template import loader, Context
 
-env = Environment(loader=PackageLoader('civomega', 'templates'))
-
-import os
 import re
 import json
-import requests
 
 SIMPLE_PATTERN = re.compile('^\s*is\s(?P<name>(\s?\w+)+)\s(?:a|the)\swerewolf',re.IGNORECASE)
 
@@ -27,7 +22,7 @@ class WerewolfMatch(Match):
     def __init__(self, noun):
         self.name = noun
         r = Random()
-        r.seed(request.remote_addr)
+        #r.seed(request.remote_addr)
         self.is_werewolf = r.choice([True, False])
         self.data = {
           'is_werewolf': self.is_werewolf,
@@ -38,7 +33,7 @@ class WerewolfMatch(Match):
         return json.dumps(self.data)
 
     def as_html(self):
-        template = env.get_template('werewolf/werewolf_search.html')
-        return template.render(**self.data)
+        template = loader.get_template('werewolf/werewolf_search.html')
+        return template.render(Context(self.data))
 
 REGISTRY.add_parser('werewolf_search', WerewolfParser)

@@ -1,8 +1,6 @@
 from civomega import Parser, Match
-from jinja2 import Environment, PackageLoader
 from civomega.registry import REGISTRY
-
-env = Environment(loader=PackageLoader('civomega', 'templates'))
+from django.template import loader, Context
 
 import os
 import re
@@ -43,7 +41,7 @@ class SimpleCapitolWordsMatch(Match):
         return json.dumps(self.data)
 
     def as_html(self):
-        template = env.get_template('capitol_words/simple_search.html')
-        return template.render(**self.data)
+        template = loader.get_template('capitol_words/simple_search.html')
+        return template.render(Context(self.data))
 
 REGISTRY.add_parser('capitol_words_search', SimpleCapitolWordsParser)

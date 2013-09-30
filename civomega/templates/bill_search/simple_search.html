@@ -16,7 +16,7 @@
   		<tr>
   			<td><a href="{{item.urls.congress}}" target="_blank">{{ item.bill_id }}</a></td>
   			<td>
-  				{% if item.short_title is none %}
+  				{% if item.short_title == none %}
   					{{ item.official_title }}
   				{% else %}
   					{{ item.short_title }}

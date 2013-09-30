@@ -1,8 +1,6 @@
 from civomega import Parser, Match
-from jinja2 import Environment, PackageLoader
 from civomega.registry import REGISTRY
-
-env = Environment(loader=PackageLoader('civomega', 'templates'))
+from django.template import loader, Context
 
 import re
 import json
@@ -268,7 +266,7 @@ class FieldInTableMatch(Match):
         return json.dumps(self._context())
 
     def as_html(self):
-        return env.get_template(self.template).render(**self._context())
+        return loader.get_template(self.template).render(Context(self._context()))
 
 
 class HispanicOriginMatch(FieldInTableMatch):
