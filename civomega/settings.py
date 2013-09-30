@@ -157,3 +157,8 @@ LOGGING = {
         },
     }
 }
+
+
+# TODO: use local_settings.py
+# TODO: make SUNLIGHT_API_KEY work with either local_settings.py
+#       OR os.environ (previous way it is set up)
