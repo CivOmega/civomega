@@ -66,7 +66,7 @@ For local installations, CivOmega is configured to use a dummy `sqlite3`
 database by default. You can initialize the database by doing:
 
 ```shell
-python manage.py syncdb
+python manage.py syncdb --migrate
 ```
 
 From here, you should be able to run the local server by running the following
@@ -90,3 +90,6 @@ python manage.py runserver
 
 If someone's made an update to the `requirements.txt`, do the `cd` and `source`
 commands and then `pip install -r requirements.txt`.
+
+If someone's made an update to a `models.py` file that requires a database
+change, simply do a `python manage.py syncdb --migrate` once again.
