@@ -1,19 +1,16 @@
 # Contributing to CivOmega
 
-Sort of doing a cheap [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
-where we'll have a `develop` branch and a `master` branch that will ALWAYS be
-in "good to deploy" condition.
+## Contribution Flow
 
-In-progress goes in `develop`.
+We're a scrappy band of digital vagabonds, and as such we will be using a cheap version [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html).  Specifically, we'll have two core branches:
 
-Due to small team size and all that, core developers will just work directly
-on CivOmega/civomega and use feature branches for big stuff. You can still
-send pull-requests against branches, by doing going to a URL like:
+- `develop` -- this branch contains the latest in-progress work.
+- `master` -- this branch will ALWAYS be in "good to deploy" condition.
 
-```https://github.com/CivOmega/civomega/compare/foo...develop```
+Since civomega is a small operation, core developers should work directly on the CivOmega/civomega repository and use feature branches for all changes.  Branches should always be named using the `username-feature_description` convention.
 
-where `foo` is the name of the feature branch you're thinking of merging into
-`develop` but want a second opinion on.
+Once a branch is ready to combine into the main project, issue a pull request from `your-branch_name` into `develop`.  You can do this using the GitHub interfaces, or if that's to complicated just use the url: https://github.com/CivOmega/civomega/compare/FOO...develop Where `FOO` is the name of the feature branch you want ot merge.
 
-Check [BOOTSTRAPPING.md](BOOTSTRAPPING.md) for info on how to check out the
-repo and run a local instance of the web app.
+## Setting Up
+
+Check [BOOTSTRAPPING.md](BOOTSTRAPPING.md) for info on how to check out the repo and run a local instance of the web app.
