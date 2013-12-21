@@ -1,3 +1,5 @@
-from django.shortcuts import render
+# coding=utf-8
+from django.http import HttpResponse
 
-# Create your views here.
+def ask(request):
+    return HttpResponse("Sorry, just a stub.", content_type="text/plain")
