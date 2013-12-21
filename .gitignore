@@ -42,3 +42,5 @@ venv
 include
 .DS_Store
 man/
+
+dev_db.sqlite3

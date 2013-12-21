@@ -61,7 +61,15 @@ source bin/activate
 pip install -r requirements.txt
 ```
 
-Now, in theory, you'll be able to run the local server by running the following
+Now you'll be able to use the Django tools to set up and use a database.
+For local installations, CivOmega is configured to use a dummy `sqlite3`
+database by default. You can initialize the database by doing:
+
+```shell
+python manage.py syncdb
+```
+
+From here, you should be able to run the local server by running the following
 command…
 
 ```shell

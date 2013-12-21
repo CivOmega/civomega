@@ -14,3 +14,6 @@ send pull-requests against branches, by doing going to a URL like:
 
 where `foo` is the name of the feature branch you're thinking of merging into
 `develop` but want a second opinion on.
+
+Check [BOOTSTRAPPING.md](BOOTSTRAPPING.md) for info on how to check out the
+repo and run a local instance of the web app.
