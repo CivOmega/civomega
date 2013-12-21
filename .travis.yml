@@ -4,3 +4,5 @@ python:
   - "pypy"
 install: pip install -r requirements.txt --use-mirrors
 script:  python manage.py test -v 3
+notifications:
+  email: false
