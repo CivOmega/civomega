@@ -1,5 +1,7 @@
 # CivOmega
 
+[![Build Status](https://travis-ci.org/CivOmega/civomega.png?branch=develop)](https://travis-ci.org/CivOmega/civomega)
+
 This doc is TODO.
 
 `civomega.data` represents Django models & functionality related to the
