@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+
+{% block content %}
+  <div class="row">
+    <div class="span12" style="margin-bottom:0">
+      <form id="question-form" class="form-search" action="{% url 'ask' %}" method='GET'>
+        <input id="question" type="text" class="span10 input input-xxlarge" name="question" placeholder="What bills are about green energy?">
+        <input id="ask" type="submit" class="span2 btn btn-primary" value="Ask!">
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
