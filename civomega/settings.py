@@ -36,6 +36,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'civomega.cologger', # avoid collision with python builtin "logger"
+    'civomega.codata',
+    'south'
 )
 
 MIDDLEWARE_CLASSES = (
