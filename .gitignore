@@ -44,3 +44,4 @@ include
 man/
 
 dev_db.sqlite3
+settings_live.py
