@@ -1,0 +1,52 @@
+upstream django {
+  server unix:///home/ubuntu/civomega_deploy/releases/current/civomega.sock;
+}
+server {
+  listen 80 default_server;
+  listen [::]:80 default_server ipv6only=on;
+
+  server_name dev.civomega.com;
+
+  location /static/ {
+      autoindex on;
+      root /home/ubuntu/civomega_deploy/releases/current;
+  }
+  location / {
+    uwsgi_pass django;
+    include uwsgi_params;
+    uwsgi_param UWSGI_SCHEME $scheme;
+    uwsgi_param SERVER_SOFTWARE nginx/$nginx_version;
+  }
+}
+
+# HTTPS server
+server {
+  listen 443 ssl;
+  server_name dev.civomega.com;
+
+  ssl on;
+  ssl_certificate /home/ubuntu/civomega.crt;
+  ssl_certificate_key /home/ubuntu/civomega.key;
+  ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+
+  ssl_stapling on;
+  resolver 8.8.8.8 8.8.4.4;
+  ssl_trusted_certificate /home/ubuntu/civomega.crt;
+  resolver_timeout 5s;
+
+  ssl_session_timeout 5m;
+
+  ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES256-SHA256:AES256-SHA:AES128-GCM-SHA256:AES128-SHA256:AES128-SHA:DES-CBC3-SHA;
+  ssl_prefer_server_ciphers on;
+
+  location /static/ {
+      autoindex on;
+      root /home/ubuntu/civomega_deploy/releases/current;
+  }
+  location / {
+    uwsgi_pass django;
+    include uwsgi_params;
+    uwsgi_param UWSGI_SCHEME $scheme;
+    uwsgi_param SERVER_SOFTWARE nginx/$nginx_version;
+  }
+}
