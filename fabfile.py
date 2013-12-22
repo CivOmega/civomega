@@ -16,7 +16,7 @@ def setup():
     """
     require('hosts')
     require('path')
-    #sudo('aptitude install -y nginx python-setuptools postgresql-client uwsgi uwsgi-plugin-python')
+    #sudo('aptitude install -y nginx python-setuptools postgresql-client python-psycopg2 uwsgi uwsgi-plugin-python')
     #sudo('easy_install pip')
     #sudo('pip install virtualenv')
 
@@ -75,6 +75,7 @@ def upload_tar_from_git():
     run('mkdir %(path)s/releases/%(release)s' % env)
     put('%(release)s.tar.gz' % env, '%(path)s/packages/' % env)
     run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz' % env)
+    put('civomega/settings_live.py', '%(path)s/releases/%(release)s/civomega/' % env)
     local('rm %(release)s.tar.gz' % env)
 def bootstrap_venv():
     "Install the required packages from the requirements file using pip"
@@ -92,11 +93,10 @@ def symlink_current_release():
     run('cd %(path)s; ln -s %(release)s releases/current' % env)
 def migrate():
     "Update the database"
-    require('project_name')
-    run('cd %(path)s/releases/current/$(project_name); ./bin/python manage.py syncdb --migrate --noinput' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py syncdb --migrate --noinput' % env)
 def restart_webserver():
     "Restart the web server"
     sudo('kill -KILL `%(path)s/releases/previous/civomega.pid`' % env, warn_only=True)
     sudo('kill -KILL `%(path)s/releases/current/civomega.pid`' % env, warn_only=True)
-    sudo('cd %(path)s/releases/current/$(project_name); uwsgi --ini uwsgi.ini' % env)
+    sudo('cd %(path)s/releases/current; uwsgi --ini uwsgi.ini' % env)
     sudo('service nginx reload' % env)
