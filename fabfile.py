@@ -16,7 +16,7 @@ def setup():
     """
     require('hosts')
     require('path')
-    #sudo('aptitude install -y nginx python-setuptools postgresql-client python-psycopg2 uwsgi uwsgi-plugin-python')
+    #sudo('aptitude install -y nginx python-setuptools postgresql-client libpq-dev python-dev uwsgi uwsgi-plugin-python')
     #sudo('easy_install pip')
     #sudo('pip install virtualenv')
 
@@ -80,7 +80,7 @@ def upload_tar_from_git():
 def bootstrap_venv():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s/releases/%(release)s; virtualenv .; ./bin/pip install -M --download-cache %(path)s/packages -r requirements.txt' % env)
+    run('cd %(path)s/releases/%(release)s; virtualenv .; ./bin/pip install -M --download-cache %(path)s/packages psycopg2; ./bin/pip install -M --download-cache %(path)s/packages -r requirements.txt' % env)
 #def install_site():
 #    "Add the virtualhost file to apache"
 #    require('release', provided_by=[deploy, setup])
