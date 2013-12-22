@@ -12,7 +12,7 @@ server {
 
   location /static/ {
       autoindex on;
-      root /home/ubuntu/deploy/civomega/releases/current/static;
+      root /home/ubuntu/civomega_deploy/releases/current;
   }
   location / {
     uwsgi_pass django;
