@@ -69,14 +69,16 @@ def rollback():
 
 # Helpers. These are called by other functions rather than directly
 def upload_tar_from_git():
+    "Create an archive from the current Git develop branch and upload it"
+
     require('release', provided_by=[deploy, setup])
-    "Create an archive from the current Git master branch and upload it"
-    local('git archive --format=tar mtigas-deploy | gzip > %(release)s.tar.gz' % env)
+    local('git archive --format=tar develop | gzip > %(release)s.tar.gz' % env)
     run('mkdir %(path)s/releases/%(release)s' % env)
     put('%(release)s.tar.gz' % env, '%(path)s/packages/' % env)
     run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz' % env)
     put('civomega/settings_live.py', '%(path)s/releases/%(release)s/civomega/' % env)
     local('rm %(release)s.tar.gz' % env)
+
 def bootstrap_venv():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
