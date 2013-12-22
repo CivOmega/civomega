@@ -17,8 +17,8 @@ def setup():
     require('hosts')
     require('path')
     sudo('aptitude install -y nginx python-setuptools postgresql-client libpq-dev python-dev uwsgi uwsgi-plugin-python')
-    sudo('easy_install pip')
-    sudo('pip install virtualenv')
+    sudo('easy_install -q pip')
+    sudo('pip install -q virtualenv')
 
     # TODO: nginx config
     #sudo('cd /etc/apache2/sites-available/; a2dissite default;')
@@ -80,12 +80,7 @@ def upload_tar_from_git():
 def bootstrap_venv():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s/releases/%(release)s; virtualenv .; ./bin/pip install -M --download-cache %(path)s/packages psycopg2; ./bin/pip install -M --download-cache %(path)s/packages -r requirements.txt' % env)
-#def install_site():
-#    "Add the virtualhost file to apache"
-#    require('release', provided_by=[deploy, setup])
-#    sudo('cd %(path)s/releases/%(release)s; cp $(project_name)$(virtualhost_path)$(project_name) /etc/apache2/sites-available/')
-#    sudo('cd /etc/apache2/sites-available/; a2ensite $(project_name)') 
+    run('cd %(path)s/releases/%(release)s; virtualenv -q .; ./bin/pip install -q -M --download-cache %(path)s/packages psycopg2; ./bin/pip install -q -M --download-cache %(path)s/packages -r requirements.txt' % env)
 def symlink_current_release():
     "Symlink our current release"
     require('release', provided_by=[deploy, setup])
@@ -93,13 +88,14 @@ def symlink_current_release():
     run('cd %(path)s; ln -s %(release)s releases/current' % env)
 def migrate():
     "Update the database"
-    run('cd %(path)s/releases/current; ./bin/python manage.py syncdb --migrate --noinput --settings=civomega.settings_live' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py syncdb -v 0 --noinput --settings=civomega.settings_live' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 0 codata --noinput --settings=civomega.settings_live' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 0 cologger --noinput --settings=civomega.settings_live' % env)
     run('cd %(path)s/releases/current; ./bin/python manage.py collectstatic -v0 --noinput --settings=civomega.settings_live' % env)
 
 def restart_webserver():
     "Restart the web server"
-    sudo('kill -KILL `%(path)s/releases/previous/civomega.pid`' % env, warn_only=True)
-    sudo('kill -KILL `%(path)s/releases/current/civomega.pid`' % env, warn_only=True)
+    sudo('killall uwsgi', warn_only=True) # TODO
     sudo('cd %(path)s/releases/current; uwsgi --ini uwsgi.ini' % env)
     sudo('chmod 777 %(path)s/releases/current/civomega.sock' % env) # TODO
-    sudo('service nginx reload' % env)
+    sudo('service nginx restart' % env)
