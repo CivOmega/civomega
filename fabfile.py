@@ -16,9 +16,9 @@ def setup():
     """
     require('hosts')
     require('path')
-    #sudo('aptitude install -y nginx python-setuptools postgresql-client libpq-dev python-dev uwsgi uwsgi-plugin-python')
-    #sudo('easy_install pip')
-    #sudo('pip install virtualenv')
+    sudo('aptitude install -y nginx python-setuptools postgresql-client libpq-dev python-dev uwsgi uwsgi-plugin-python')
+    sudo('easy_install pip')
+    sudo('pip install virtualenv')
 
     # TODO: nginx config
     #sudo('cd /etc/apache2/sites-available/; a2dissite default;')
@@ -93,10 +93,13 @@ def symlink_current_release():
     run('cd %(path)s; ln -s %(release)s releases/current' % env)
 def migrate():
     "Update the database"
-    run('cd %(path)s/releases/current; ./bin/python manage.py syncdb --migrate --noinput' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py syncdb --migrate --noinput --settings=civomega.settings_live' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py collectstatic -v0 --noinput --settings=civomega.settings_live' % env)
+
 def restart_webserver():
     "Restart the web server"
     sudo('kill -KILL `%(path)s/releases/previous/civomega.pid`' % env, warn_only=True)
     sudo('kill -KILL `%(path)s/releases/current/civomega.pid`' % env, warn_only=True)
     sudo('cd %(path)s/releases/current; uwsgi --ini uwsgi.ini' % env)
+    sudo('chmod 777 %(path)s/releases/current/civomega.sock' % env) # TODO
     sudo('service nginx reload' % env)
