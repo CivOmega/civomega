@@ -16,7 +16,7 @@ def setup():
     """
     require('hosts')
     require('path')
-    #sudo('aptitude install -y nginx python-setuptools postgresql-client')
+    #sudo('aptitude install -y nginx python-setuptools postgresql-client uwsgi uwsgi-plugin-python')
     #sudo('easy_install pip')
     #sudo('pip install virtualenv')
 
@@ -96,4 +96,7 @@ def migrate():
     run('cd %(path)s/releases/current/$(project_name); ./bin/python manage.py syncdb --migrate --noinput' % env)
 def restart_webserver():
     "Restart the web server"
-    sudo('/etc/init.d/apache2 restart')
+    sudo('kill -KILL `%(path)s/releases/previous/civomega.pid`' % env, warn_only=True)
+    sudo('kill -KILL `%(path)s/releases/current/civomega.pid`' % env, warn_only=True)
+    sudo('cd %(path)s/releases/current/$(project_name); uwsgi --ini uwsgi.ini' % env)
+    sudo('service nginx reload' % env)
