@@ -2,6 +2,8 @@ Django==1.6.1
 South==0.8.4
 wsgiref==0.1.2
 
+-e git://github.com/CivOmega/civomega-mod-example.git@e951128a236c633ac845bf0038813ac0843ae726#egg=civomega-mod-example
+
 #Fabric==1.8.0
 #ecdsa==0.10
 #paramiko==1.12.0
