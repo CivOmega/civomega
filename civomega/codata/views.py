@@ -2,6 +2,8 @@
 from django.http import HttpResponse
 import json
 
+from civomega.codata.models import Module, QuestionPattern
+
 def ask(request):
     return HttpResponse("Sorry, just a stub.", content_type="text/plain")
 
@@ -25,32 +27,44 @@ def pattern_match(request):
     query = request.GET.get('q', None)
     callback = request.GET.get('callback', None)
 
+    # TODO actually try to narrow
+    pattern_matches = []
+    for m in Module.objects.all():
+        for p in m.questionpattern_set.all():
+            pattern_matches.append({
+                'id': p.id,
+                'pattern': p.pattern_str
+            })
+
     data = {
       'q': query,
-      'matches': (
-        {'id': 1, 'pattern': 'What bills are about {subject}?'}
-      )
+      'matches': pattern_matches
     }
     return _return_jsonp(data, callback)
 
 def pattern_invoke(request):
-    module_id = request.GET.get('id', None)
+    pattern_id = request.GET.get('id', None)
     callback = request.GET.get('callback', None)
+    args = request.GET.get('args', '')
 
     # TODO:
-    # 1 fetch module (module_id)
-    # 2 pass `request` to module
-    # 3 module will pick up the key->value combinations associated
-    #   with that pattern, maybe? i.e. subject = request.GET.get('subject')
-    # 4 now we have args for module to do API call, return results
     # * what do we want results JSON to look like
+    # * we should probably actually use render_answer_json helpers, etc
+
+    pattern = QuestionPattern.objects.get(id=pattern_id)
+    answer_data = pattern.answer(args.split(','))
 
     data = {
-      'module_id': module_id
+      'pattern_id': pattern_id,
+      'pattern_str': pattern.pattern_str,
+      'module_name': pattern.module.name,
+      'module_pyname': pattern.module.pymodule,
+      'answer_data': answer_data
     }
     return _return_jsonp(data, callback)
 
 def generic_query(request):
+    # TODO
     query = request.GET.get('q', None)
     callback = request.GET.get('callback', None)
 

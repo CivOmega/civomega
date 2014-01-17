@@ -76,7 +76,7 @@ class QuestionPattern(models.Model):
         # simulate "from MODULENAME import parser" and dynamically load
         # the python library defined in this pattern's module (see
         # Module.pymodule, above)
-        _mod = __import__(module.pymodule, globals(), locals(), ['parser'], -1)
+        _mod = __import__(self.module.pymodule, globals(), locals(), ['parser'], -1)
         parser = _mod.parser
 
         return parser.answer_pattern(self.pattern_str, args)
