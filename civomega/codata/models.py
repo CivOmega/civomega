@@ -1,6 +1,5 @@
 # coding=utf-8
 from django.db import models
-from importlib import import_module
 
 class DataSource(models.Model):
     """ A datasource, such as an external API. """
