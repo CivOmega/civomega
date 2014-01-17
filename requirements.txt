@@ -5,6 +5,7 @@ wsgiref==0.1.2
 # Modules (this is current way we define installed modules. modules
 # must be forked to github.com/civomega/ and reviewed and then included
 # here, pointing to a specific commit)
+# -> ALSO UPDATE `CIVOMEGA_MODULES` IN civomega/settings.py
 -e git://github.com/CivOmega/civomega-mod-example.git@7cd4f6efdce39e7539ed507f9a52eb6f1b08d7d3#egg=civomega-mod-example
 
 #Fabric==1.8.0
