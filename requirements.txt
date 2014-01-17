@@ -2,7 +2,10 @@ Django==1.6.1
 South==0.8.4
 wsgiref==0.1.2
 
--e git://github.com/CivOmega/civomega-mod-example.git@e951128a236c633ac845bf0038813ac0843ae726#egg=civomega-mod-example
+# Modules (this is current way we define installed modules. modules
+# must be forked to github.com/civomega/ and reviewed and then included
+# here, pointing to a specific commit)
+-e git://github.com/CivOmega/civomega-mod-example.git@7cd4f6efdce39e7539ed507f9a52eb6f1b08d7d3#egg=civomega-mod-example
 
 #Fabric==1.8.0
 #ecdsa==0.10
