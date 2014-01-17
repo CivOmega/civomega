@@ -90,10 +90,10 @@ def symlink_current_release():
     run('cd %(path)s; ln -s %(release)s releases/current' % env)
 def migrate():
     "Update the database"
-    run('cd %(path)s/releases/current; ./bin/python manage.py syncdb -v 0 --noinput --settings=civomega.settings_live' % env)
-    run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 0 codata --noinput --settings=civomega.settings_live' % env)
-    run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 0 cologger --noinput --settings=civomega.settings_live' % env)
-    run('cd %(path)s/releases/current; ./bin/python manage.py collectstatic -v0 --noinput --settings=civomega.settings_live' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py syncdb -v 3 --noinput --settings=civomega.settings_live' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 3 codata --noinput --settings=civomega.settings_live' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 3 cologger --noinput --settings=civomega.settings_live' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py collectstatic -v1 --noinput --settings=civomega.settings_live' % env)
     run('cd %(path)s/releases/current; ./bin/python manage.py update_patterns' % env)
 
 def restart_webserver():
