@@ -94,6 +94,7 @@ def migrate():
     run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 0 codata --noinput --settings=civomega.settings_live' % env)
     run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 0 cologger --noinput --settings=civomega.settings_live' % env)
     run('cd %(path)s/releases/current; ./bin/python manage.py collectstatic -v0 --noinput --settings=civomega.settings_live' % env)
+    run('cd %(path)s/releases/current; ./bin/python manage.py update_patterns' % env)
 
 def restart_webserver():
     "Restart the web server"
