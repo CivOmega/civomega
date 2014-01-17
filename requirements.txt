@@ -2,6 +2,12 @@ Django==1.6.1
 South==0.8.4
 wsgiref==0.1.2
 
+# Modules (this is current way we define installed modules. modules
+# must be forked to github.com/civomega/ and reviewed and then included
+# here, pointing to a specific commit)
+# -> ALSO UPDATE `CIVOMEGA_MODULES` IN civomega/settings.py
+-e git://github.com/CivOmega/civomega-mod-example.git@3707ea3e01d9a7c0b409db9ccf3412ec50c68bc9#egg=civomega-mod-example
+
 #Fabric==1.8.0
 #ecdsa==0.10
 #paramiko==1.12.0
