@@ -245,11 +245,11 @@
                     url: self.options.patternUrl,
                     dataType: "json",
                     data: {
-                        text: text
+                        q: text
                     }
                 })
                 .done(function( data ) {
-                    self.patternCache = data.patterns;
+                    self.patternCache = data.matches;
                     self.highlightedIndex = -1;
                     self.activeAjax = null;
                     self.redraw();
@@ -349,7 +349,8 @@
         renderPattern: function(pattern) {
             // Takes a pattern string and returns an HTML string
             var self = this;
-            var breakdown = pattern.split(/(\{[^\}]*\})/);
+            var patternString = pattern.pattern_str
+            var breakdown = patternString.split(/(\{[^\}]*\})/);
             var html = "";
             for(var x in breakdown) {
                 var item = breakdown[x];
@@ -378,6 +379,7 @@
         parsePattern: function(pattern) {
             // Takes a pattern string and returns a segment array
             var self = this;
+            var patternString = pattern.pattern_str;
             var breakdown = pattern.split(/(\{[^\}]*\})/);
             var segments = [];
             for(var x in breakdown) {

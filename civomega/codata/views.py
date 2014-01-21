@@ -33,7 +33,7 @@ def pattern_match(request):
         for p in m.questionpattern_set.all():
             pattern_matches.append({
                 'id': p.id,
-                'pattern': p.pattern_str
+                'pattern_str': p.pattern_str
             })
 
     data = {
