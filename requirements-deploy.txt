@@ -1,0 +1,8 @@
+# This file contains requirements that you need ONLY if you
+# are running Fabric to deploy code to the live server.
+# If you're simply contributing to CivOmega and are running a local
+# copy of CivOmega, all you need is requirements.txt
+Fabric==1.8.0
+ecdsa==0.10
+paramiko==1.12.0
+pycrypto==2.6.1

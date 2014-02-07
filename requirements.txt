@@ -7,8 +7,3 @@ wsgiref==0.1.2
 # here, pointing to a specific commit)
 # -> ALSO UPDATE `CIVOMEGA_MODULES` IN civomega/settings.py
 -e git://github.com/CivOmega/civomega-mod-example.git@3707ea3e01d9a7c0b409db9ccf3412ec50c68bc9#egg=civomega-mod-example
-
-#Fabric==1.8.0
-#ecdsa==0.10
-#paramiko==1.12.0
-#pycrypto==2.6.1
