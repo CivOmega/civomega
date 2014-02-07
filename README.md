@@ -2,7 +2,11 @@
 
 [![Build Status](https://travis-ci.org/CivOmega/civomega.png?branch=develop)](https://travis-ci.org/CivOmega/civomega)
 
-This doc is TODO.
+This doc is TODO. But there's a *tiny* bit of developer-specific documentation
+available. See [CONTRIBUTING.md](CONTRIBUTING.md) and the files in the
+[docs directory](docs).
+
+---
 
 `civomega.data` represents Django models & functionality related to the
 question-answering `Module`s, `DataSource`s, `QuestionPattern`s and the like.
