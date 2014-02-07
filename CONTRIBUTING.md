@@ -13,6 +13,6 @@ Once a branch is ready to combine into the main project, issue a pull request fr
 
 ## Setting Up
 
-Check the [docs directory](docs) and look for the files named "BOOTSTRAPPING"
+Check the [doc directory](doc) and look for the files named "BOOTSTRAPPING"
 (they're OS-dependent) for info on how to check out the repo and
 run a local instance of the web app.

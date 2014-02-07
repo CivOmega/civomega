@@ -4,7 +4,7 @@
 
 This doc is TODO. But there's a *tiny* bit of developer-specific documentation
 available. See [CONTRIBUTING.md](CONTRIBUTING.md) and the files in the
-[docs directory](docs).
+[doc directory](doc).
 
 ---
 
