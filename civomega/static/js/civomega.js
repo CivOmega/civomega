@@ -30,13 +30,15 @@
         self.lastLetter = 0;           // Used if you need keydown events but also need the character inputted
 
         self.lockedPattern = null;  // The pattern that is actively being completed
-        self.activeEntity = null;   // The the ID of the pattern's entity that is actively being populated
+        self.activeEntity = -1;   // The the ID of the pattern's entity that we want to focus on next
         self.patternSegments = [];  // The pieces of the pattern associated with this question
         self.entityValues = [];     // The values we have collected so far
 
         self.activeAjax = null;
         self.highlightedIndex = -1;
         self.cursorIndex = -1;
+
+        self.refocus = false;   // Set to true whenever we want to change the active focus based on an event or set of rules
 
         self.init();
     }
@@ -47,6 +49,8 @@
             var self = this;
             var $el = $(this.element)
                 .addClass("civomega");
+
+            self.$el = $el;
 
             // Add interface elements
             self.interface = [];
@@ -124,20 +128,14 @@
 
         processKeydown: function(e) {
             var self = this;
+
+            // Convert the keypress to the appropriate letter
             self.lastLetter = String.fromCharCode(e.keyCode);
             self.lastLetter = e.shiftKey?self.lastLetter:self.lastLetter.toLowerCase();
-            self.lastLetter = (self.lastLetter.match(/[a-zA-Z ]/)?self.lastLetter:"");
+            self.lastLetter = (self.lastLetter.match(/[a-zA-Z.,?0-9]/)?self.lastLetter:"");
+            if(e.keyCode == 32) self.lastLetter = " "; // "space" is the only whitespace we care about
 
             switch(e.keyCode) {
-
-                case 13: // enter
-                    // If we are in the pattern list, enter locks the currently highlighted pattern
-                    if(self.isPatternList() && self.highlightedIndex != -1) {
-                        self.lockPattern(self.patternCache[self.highlightedIndex]);
-                        self.redraw();
-                        return false;
-                    }
-                    break;
 
                 case 8: // delete
                     // If we are in the pattern list, delete unhighlights the currently highlighted pattern
@@ -145,8 +143,29 @@
                         self.highlightedIndex = -1;
                         self.redraw();
                     } else {
-                        if(getCursorPosition() == 0)
-                            self.cancelPattern();
+                        if(getCursorPosition() == 0) {
+                            if (self.activeEntity == 0) {
+                                self.cancelPattern();
+                                self.redraw();
+                                return false;
+                            }
+                            else {
+                                self.previousEntity();
+                                self.redraw();
+                                return false;
+                            }
+                        } else {
+                            self.redraw();
+                        }
+                    }
+                    break;
+
+                case 13: // enter
+                    // If we are in the pattern list, enter locks the currently highlighted pattern
+                    if(self.isPatternList() && self.highlightedIndex != -1) {
+                        self.lockPattern(self.patternCache[self.highlightedIndex]);
+                        self.redraw();
+                        return false;
                     }
                     break;
 
@@ -165,10 +184,21 @@
                 case 37: // left
 
                     // If we are in the pattern list, left unhighlights the currently highlighted pattern
+                    // If we are in the entity entry, and the cursor is at the front, left moves to the previous entry
                     if(self.isPatternList() && self.highlightedIndex != -1) {
                         self.highlightedIndex = -1;
                         self.redraw();
                         return false;
+                    } else if(self.isPatternLocked()) {
+                        var cursor = getCursorPosition();
+                        var entities = self.interface.$questionSegments.find("input");
+                        var $entity = $(entities[self.activeEntity]);
+                        if(cursor == 0) {
+                            // Move to the previous entity
+                            self.previousEntity();
+                            self.redraw();
+                            return false;
+                        }
                     } else {
                         self.redraw();
                     }
@@ -184,11 +214,22 @@
                     break;
 
                 case 39: // right
-                    // If we are in the pattern list, enter locks the currently highlighted pattern
+                    // If we are in the pattern list, right locks the currently highlighted pattern
+                    // If we are in the entity entry, and the cursor is at the end of an entity, right moves to the next entry
                     if(self.isPatternList() && self.highlightedIndex != -1) {
                         self.lockPattern(self.patternCache[self.highlightedIndex]);
                         self.redraw();
                         return false;
+                    } else if(self.isPatternLocked()) {
+                        var cursor = getCursorPosition();
+                        var entities = self.interface.$questionSegments.find("input");
+                        var $entity = $(entities[self.activeEntity]);
+                        if(cursor == $entity.val().length) {
+                            // Move to the next entity
+                            self.nextEntity();
+                            self.redraw();
+                            return false;
+                         }
                     } else {
                         self.redraw();
                     }
@@ -212,6 +253,8 @@
         processKeyup: function(e) {
             var self = this;
             switch(e.keyCode) {
+                case 8: // delete
+                    break;
                 case 13: // enter
                     break;
                 case 27: // escape
@@ -245,14 +288,19 @@
                     url: self.options.patternUrl,
                     dataType: "json",
                     data: {
-                        text: text
+                        q: text
                     }
                 })
                 .done(function( data ) {
-                    self.patternCache = data.patterns;
-                    self.highlightedIndex = -1;
-                    self.activeAjax = null;
-                    self.redraw();
+                    // If there used to be a match, but there isn't any longer...
+                    if(data.matches.length == 0 && self.isPatternSelected() ) {
+                        self.lockPattern(self.patternCache[self.highlightedIndex]);
+                    } else {
+                        self.patternCache = data.matches;
+                        self.highlightedIndex = 0;
+                        self.activeAjax = null;
+                        self.redraw();
+                    }
                 })
                 self.redraw();
             }
@@ -282,29 +330,52 @@
                         .appendTo(self.interface.$questionSegments);
                     self.interface.questionSegments[x] = $segmentElement;
                 } else {
-                    var $segmentElement = $("<input>")
-                        .attr("type","text")
-                        .addClass("civomega-question-input")
+                    var $segmentElement = $("<div>")
                         .addClass("civomega-question-segment")
                         .addClass("civomega-question-segment-input")
                         .addClass("civomega-entity-" + segment.value.code)
+                        .appendTo(self.interface.$questionSegments);
+
+                    var $segmentElementQuestion = $("<input>")
+                        .attr("type","text")
+                        .addClass("civomega-question-input")
                         .keydown(function(e) {
                             return self.processKeydown(e);
                         })
                         .keyup(function(e) {
                             return self.processKeyup(e);
                         })
-                        .appendTo(self.interface.$questionSegments);
+                        .appendTo($segmentElement);
+
+                    var $segmentElementLabel = $("<label>")
+                        .addClass("civomega-question-label")
+                        .text(segment.value.display_name)
+                        .appendTo($segmentElement);
                     self.interface.questionSegments[x] = $segmentElement;
                 }
                 self.interface.$questionSegments.width(totalWidth);
             }
+            self.activeEntity = 0;
+            self.refocus = true;
         },
 
         cancelPattern: function() {
             // Undo the current pattern
             var self = this;
             self.lockedPattern = null;
+        },
+
+        nextEntity: function() {
+            var self = this;
+            var entities = self.interface.$questionSegments.find("input");
+            self.activeEntity = Math.min(entities.length - 1, self.activeEntity + 1);
+            self.refocus = true;
+        },
+
+        previousEntity: function() {
+            var self = this;
+            self.activeEntity = Math.max(0, self.activeEntity - 1);
+            self.refocus = true;
         },
 
         activateEntity: function(entity) {
@@ -321,6 +392,12 @@
 
         editEntity: function(index) {
             var self = this;
+        },
+
+        isPatternSelected: function() {
+            // Returns true if the user has highlighted a pattern from the list
+            var self = this;
+            return !self.highlightedIndex != -1;
         },
 
         isPatternList: function() {
@@ -343,13 +420,14 @@
         isEntityInput: function() {
             // Returns true if the user is currently entering an entity
             var self = this;
-            return self.activeEntity != null;
+            return self.activeEntity != -1;
         },
 
         renderPattern: function(pattern) {
             // Takes a pattern string and returns an HTML string
             var self = this;
-            var breakdown = pattern.split(/(\{[^\}]*\})/);
+            var patternText = pattern.pattern;
+            var breakdown = patternText.split(/(\{[^\}]*\})/);
             var html = "";
             for(var x in breakdown) {
                 var item = breakdown[x];
@@ -378,7 +456,8 @@
         parsePattern: function(pattern) {
             // Takes a pattern string and returns a segment array
             var self = this;
-            var breakdown = pattern.split(/(\{[^\}]*\})/);
+            var patternText = pattern.pattern;
+            var breakdown = patternText.split(/(\{[^\}]*\})/);
             var segments = [];
             for(var x in breakdown) {
                 var item = breakdown[x];
@@ -447,17 +526,27 @@
                 self.interface.$questionInputBase.show();
                 self.interface.$questionInputBase.focus();
             }
+
+            // Add appropriate classes to reflect state
+            if(self.isPatternList()) {
+                self.$el.addClass("patternList");
+            } else {
+                self.$el.removeClass("patternList");
+            }
         },
 
         redraw_question: function() {
             var self = this;
             if(self.isPatternLocked()) {
-
                 // Set the input field widths to match their content
-                self.interface.$questionSegments.children("input").each( function(){
+                self.interface.$questionSegments.find("input").each( function(index){
                     var $this = $(this);
                     var contentWidth = getContentWidth(this, $this.val() + ($this.is(":focus")?self.lastLetter:""));
                     $this.width(contentWidth);
+                    if(index == self.activeEntity && self.refocus) {
+                        self.refocus = false;
+                        $this.focus();
+                    }
                 });
 
                 // Set the segment container field width to match the content
@@ -474,6 +563,7 @@
 
                 // Position the cursor relative to the parent
                 var centered = cursorLeftOffset - self.interface.$question.width() / 2;
+
                 position = Math.min(self.interface.$questionSegments.width() - self.interface.$question.width(), centered); // Don't have the right appear before the right
                 position = Math.max(0, position); // Dont have the left appear after the left
                 self.interface.$questionSegments.css("left", -position);
@@ -551,8 +641,8 @@
             .css("font-size", $element.css("font-size"))
             .css("font-weight", $element.css("font-weight"))
             .css("font-family", $element.css("font-family"))
-            .css("whitespace", "pre")
-            .text(text)
+            .css("white-space", "pre")
+            .html(text)
             .insertBefore($element);
         width = $temp.width();
         $temp.remove();

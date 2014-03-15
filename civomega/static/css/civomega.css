@@ -1,0 +1,117 @@
+.civomega * {
+  margin: 0px;
+  padding: 0px;
+}
+.civomega input:focus{
+    outline: 0;
+}
+
+.civomega .civomega-question {
+  width: 500px;
+  padding: 10px;
+  margin: auto;
+  margin-top: 50px;
+  display: block;
+  font-size: 20px;
+  border: 1px solid #555;
+  overflow: hidden;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #555555;
+}
+
+
+.civomega.patternList .civomega-question {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.civomega .civomega-question-input {
+  height: auto;
+  border: 0px;
+  display: block;
+  font-size: 20px;
+  padding: 0px;
+  margin: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  background: inherit;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.civomega .civomega-question-input:focus {
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.civomega .civomega-question-base {
+  width: 100%;
+  display: block;
+  font-size: 20px;
+}
+.civomega .civomega-question-segments {
+  position: relative;
+}
+.civomega .civomega-question-segment {
+  float: left;
+  padding-right: 4px;
+}
+.civomega .civomega-question-segment-input {
+  min-width: 10px;
+  min-height: 30px;
+}
+.civomega .civomega-question-segment-text {
+  white-space: nowrap;
+  margin-top: 2px;
+}
+.civomega .civomega-question-segment .civomega-question-label {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border-top: 2px solid #555;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.civomega .civomega-question-segment .civomega-question-input {
+  min-width: 100%;
+}
+
+.civomega .civomega-patternlist {
+  list-style: none;
+  border: 1px solid #555;
+  border-bottom: none;
+  width: 520px;
+  border-top: 0px;
+  margin: auto;
+  display: block;
+  font-size: 20px;
+}
+.civomega .civomega-patternlist li {
+  list-style: none;
+  border-bottom: 1px solid #555;
+  font-size: 20px;
+  cursor: pointer;
+  text-align: left;
+  padding: 5px 10px;
+}
+.civomega .civomega-patternlist li.active {
+  background: #E54D42;
+  color: white;
+}
+.civomega .civomega-entity {
+  display: inline-block;
+  border-bottom: 2px solid #555;
+  padding: 5px;
+  padding-bottom: 0px;
+  margin: 5px;
+  font-size: 12px;
+}
+.civomega li.active .civomega-entity {
+  border-bottom: 2px solid white;
+}
