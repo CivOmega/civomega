@@ -61,6 +61,14 @@
                 .addClass("civomega-question")
                 .appendTo($el);
             self.interface.$question = $question;
+            
+            // The submit button
+            var $submitButton = $("<input>")
+                .addClass("btn")
+                .addClass("civomega-submit")
+                .attr("type","submit")
+                .val("Ask!")
+                .appendTo($el);
 
             // The segment container
             var $questionSegments = $("<div>")
@@ -156,6 +164,9 @@
                             }
                         } else {
                             self.redraw();
+                            setTimeout(function() {
+                                self.redraw();
+                            }, 0);
                         }
                     }
                     break;
@@ -252,6 +263,7 @@
 
         processKeyup: function(e) {
             var self = this;
+            self.lastLetter = "";
             switch(e.keyCode) {
                 case 8: // delete
                     break;
@@ -270,6 +282,8 @@
                 default:
                     if(!self.isPatternLocked())
                         self.refreshPatterns();
+                    if(self.isPatternLocked())
+                        self.redraw();
                     break;
             }
         },
@@ -541,7 +555,7 @@
                 // Set the input field widths to match their content
                 self.interface.$questionSegments.find("input").each( function(index){
                     var $this = $(this);
-                    var contentWidth = getContentWidth(this, $this.val() + ($this.is(":focus")?self.lastLetter:""));
+                    var contentWidth = getContentWidth(this, $this.val() + ($this.is(":focus")?self.lastLetter:"")) + 2;
                     $this.width(contentWidth);
                     if(index == self.activeEntity && self.refocus) {
                         self.refocus = false;
