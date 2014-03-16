@@ -12,6 +12,7 @@
             entityUrl: "",     // URL to page which will return matching entities
             answerUrl: "",     // URL to page which will take a question and return answers
             styleUrl: "",      // URL to dynamic css file
+            submitUrl: "",     // URL to submit the file
         };
 
     // The actual plugin constructor
@@ -61,14 +62,18 @@
                 .addClass("civomega-question")
                 .appendTo($el);
             self.interface.$question = $question;
-            
+
             // The submit button
             var $submitButton = $("<input>")
                 .addClass("btn")
                 .addClass("civomega-submit")
                 .attr("type","submit")
                 .val("Ask!")
+                .click(function(e) {
+                    self.submit();
+                })
                 .appendTo($el);
+            self.interface.$submitButton = $submitButton;
 
             // The segment container
             var $questionSegments = $("<div>")
@@ -178,6 +183,18 @@
                         self.redraw();
                         return false;
                     }
+
+                    if(self.isPatternLocked()) {
+                        if(self.isLastEntity()) {
+                            self.submit();
+                        }
+                        else {
+                            self.nextEntity();
+                            self.redraw();
+                            return false;
+                        }
+                    }
+
                     break;
 
                 case 27: // escape
@@ -373,6 +390,31 @@
             self.refocus = true;
         },
 
+        submit: function() {
+            var self = this;
+            if(self.isPatternLocked()) {
+                var pattern = self.lockedPattern;
+                var entities = self.interface.$questionSegments.find("input");
+                var values = [];
+                $(entities).each(function(i, entity) {
+                    values.push($(entity).val());
+                });
+
+                $.ajax({
+                    method: "GET",
+                    url: self.options.submitUrl,
+                    dataType: "json",
+                    data: {
+                        id: self.lockedPattern.id,
+                        args: values
+                    }
+                })
+                .done(function( data ) {
+                    console.log(data);
+                });
+            }
+        },
+
         cancelPattern: function() {
             // Undo the current pattern
             var self = this;
@@ -406,6 +448,13 @@
 
         editEntity: function(index) {
             var self = this;
+        },
+
+        isLastEntity: function() {
+            // Returns true if the user is entering data in the last item on the list
+            var self = this;
+            var entities = self.interface.$questionSegments.find("input");
+            return self.isPatternLocked() && (self.activeEntity == entities.length - 1);
         },
 
         isPatternSelected: function() {
