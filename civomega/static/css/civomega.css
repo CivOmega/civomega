@@ -10,8 +10,7 @@
   width: 500px;
   padding: 10px;
   margin: auto;
-  margin-top: 50px;
-  display: block;
+  float: left;
   font-size: 20px;
   border: 1px solid #555;
   overflow: hidden;
@@ -23,6 +22,21 @@
   color: #555555;
 }
 
+.civomega .civomega-submit {
+  float: left;
+  background-image: none;
+  background-color: #e74c3c;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: none;
+  border: 0;
+  border-bottom: 1px solid #a82215;
+  text-transform: uppercase;
+  font-family: "Lato";
+  height: 46px;
+  width: 100px;
+  margin-left: 10px;
+}
 
 .civomega.patternList .civomega-question {
   border-bottom-right-radius: 0px;
@@ -88,7 +102,7 @@
   border-bottom: none;
   width: 520px;
   border-top: 0px;
-  margin: auto;
+  float: left;
   display: block;
   font-size: 20px;
 }
@@ -99,6 +113,7 @@
   cursor: pointer;
   text-align: left;
   padding: 5px 10px;
+  background: #fff;
 }
 .civomega .civomega-patternlist li.active {
   background: #E54D42;

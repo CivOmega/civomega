@@ -78,6 +78,11 @@ p {
 	padding: 4px;
 }
 
+#question {
+	width: 632px;
+	margin: auto;
+}
+
 #question-form {
 	position: relative;
 }

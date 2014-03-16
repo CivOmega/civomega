@@ -12,6 +12,7 @@
             entityUrl: "",     // URL to page which will return matching entities
             answerUrl: "",     // URL to page which will take a question and return answers
             styleUrl: "",      // URL to dynamic css file
+            submitUrl: "",     // URL to submit the file
         };
 
     // The actual plugin constructor
@@ -61,6 +62,18 @@
                 .addClass("civomega-question")
                 .appendTo($el);
             self.interface.$question = $question;
+
+            // The submit button
+            var $submitButton = $("<input>")
+                .addClass("btn")
+                .addClass("civomega-submit")
+                .attr("type","submit")
+                .val("Ask!")
+                .click(function(e) {
+                    self.submit();
+                })
+                .appendTo($el);
+            self.interface.$submitButton = $submitButton;
 
             // The segment container
             var $questionSegments = $("<div>")
@@ -156,6 +169,9 @@
                             }
                         } else {
                             self.redraw();
+                            setTimeout(function() {
+                                self.redraw();
+                            }, 0);
                         }
                     }
                     break;
@@ -167,6 +183,18 @@
                         self.redraw();
                         return false;
                     }
+
+                    if(self.isPatternLocked()) {
+                        if(self.isLastEntity()) {
+                            self.submit();
+                        }
+                        else {
+                            self.nextEntity();
+                            self.redraw();
+                            return false;
+                        }
+                    }
+
                     break;
 
                 case 27: // escape
@@ -252,6 +280,7 @@
 
         processKeyup: function(e) {
             var self = this;
+            self.lastLetter = "";
             switch(e.keyCode) {
                 case 8: // delete
                     break;
@@ -270,6 +299,8 @@
                 default:
                     if(!self.isPatternLocked())
                         self.refreshPatterns();
+                    if(self.isPatternLocked())
+                        self.redraw();
                     break;
             }
         },
@@ -359,6 +390,31 @@
             self.refocus = true;
         },
 
+        submit: function() {
+            var self = this;
+            if(self.isPatternLocked()) {
+                var pattern = self.lockedPattern;
+                var entities = self.interface.$questionSegments.find("input");
+                var values = [];
+                $(entities).each(function(i, entity) {
+                    values.push($(entity).val());
+                });
+
+                $.ajax({
+                    method: "GET",
+                    url: self.options.submitUrl,
+                    dataType: "json",
+                    data: {
+                        id: self.lockedPattern.id,
+                        args: values
+                    }
+                })
+                .done(function( data ) {
+                    console.log(data);
+                });
+            }
+        },
+
         cancelPattern: function() {
             // Undo the current pattern
             var self = this;
@@ -392,6 +448,13 @@
 
         editEntity: function(index) {
             var self = this;
+        },
+
+        isLastEntity: function() {
+            // Returns true if the user is entering data in the last item on the list
+            var self = this;
+            var entities = self.interface.$questionSegments.find("input");
+            return self.isPatternLocked() && (self.activeEntity == entities.length - 1);
         },
 
         isPatternSelected: function() {
@@ -541,7 +604,7 @@
                 // Set the input field widths to match their content
                 self.interface.$questionSegments.find("input").each( function(index){
                     var $this = $(this);
-                    var contentWidth = getContentWidth(this, $this.val() + ($this.is(":focus")?self.lastLetter:""));
+                    var contentWidth = getContentWidth(this, $this.val() + ($this.is(":focus")?self.lastLetter:"")) + 2;
                     $this.width(contentWidth);
                     if(index == self.activeEntity && self.refocus) {
                         self.refocus = false;
