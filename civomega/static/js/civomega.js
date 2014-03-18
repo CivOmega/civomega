@@ -31,6 +31,7 @@
         self.lastLetter = 0;           // Used if you need keydown events but also need the character inputted
 
         self.lockedPattern = null;  // The pattern that is actively being completed
+        self.loadedResults = []; // Do we have loaded results
         self.activeEntity = -1;   // The the ID of the pattern's entity that we want to focus on next
         self.patternSegments = [];  // The pieces of the pattern associated with this question
         self.entityValues = [];     // The values we have collected so far
@@ -57,10 +58,15 @@
             self.interface = [];
             self.interface.questionSegments = [];
 
+            // The form container
+            var $form = $("<div>")
+                .addClass("civomega-form")
+                .appendTo($el);
+
             // The question container
             var $question = $("<div>")
                 .addClass("civomega-question")
-                .appendTo($el);
+                .appendTo($form);
             self.interface.$question = $question;
 
             // The submit button
@@ -72,7 +78,7 @@
                 .click(function(e) {
                     self.submit();
                 })
-                .appendTo($el);
+                .appendTo($form);
             self.interface.$submitButton = $submitButton;
 
             // The segment container
@@ -100,29 +106,29 @@
             var $ajaxStatus = $("<div>")
                 .addClass("civomega-ajax-status")
                 .hide()
-                .appendTo($el);
+                .appendTo($form);
             self.interface.$ajaxStatus = $ajaxStatus;
 
             // The list of patterns returned from the server
             var $patternList = $("<ul>")
                 .addClass("civomega-patternlist")
                 .hide()
-                .appendTo($el);
+                .appendTo($form);
             self.interface.$patternList = $patternList;
 
             // The list of entities returned from the server
             var $entityList = $("<ul>")
                 .addClass("civomega-entitylist")
                 .hide()
-                .appendTo($el);
+                .appendTo($form);
             self.interface.$entityList = $entityList;
 
-            // The list of answers returned from the server
-            var $answerList = $("<ul>")
-                .addClass("civomega-answerlist")
+            // The results pane
+            var $results = $("<div>")
+                .addClass("civomega-results")
                 .hide()
                 .appendTo($el);
-            self.interface.$answerList = $answerList;
+            self.interface.$results = $results;
 
             // Load in our registered entity types
             self.activeAjax = $.ajax({
@@ -324,14 +330,25 @@
                 })
                 .done(function( data ) {
                     // If there used to be a match, but there isn't any longer...
-                    if(data.matches.length == 0 && self.isPatternSelected() ) {
-                        self.lockPattern(self.patternCache[self.highlightedIndex]);
+                    if(data.matches.length == 0 && self.isPatternSelected()) {
+                        var pattern = self.patternCache[self.highlightedIndex];
+                        var currentText = self.interface.$questionInputBase.val();
+                        var patternStem = pattern.pattern.replace(/\{.*/, "");
+                        var firstText = currentText.substring(patternStem.length);
+                        self.lockPattern(pattern);
+                        $(self.interface.$questionSegments.find("input")[0]).val(firstText);
                     } else {
                         self.patternCache = data.matches;
-                        self.highlightedIndex = 0;
                         self.activeAjax = null;
                         self.redraw();
                     }
+
+                    // Update (or reset) selected match
+                    if(data.matches.length == 0)
+                        self.highlightedIndex = -1;
+                    else if (!self.isPatternSelected())
+                        self.highlightedIndex = 0;
+
                 })
                 self.redraw();
             }
@@ -410,7 +427,8 @@
                     }
                 })
                 .done(function( data ) {
-                    console.log(data);
+                    self.loadedResults = [data];
+                    self.redraw();
                 });
             }
         },
@@ -460,7 +478,7 @@
         isPatternSelected: function() {
             // Returns true if the user has highlighted a pattern from the list
             var self = this;
-            return !self.highlightedIndex != -1;
+            return self.highlightedIndex != -1;
         },
 
         isPatternList: function() {
@@ -484,6 +502,11 @@
             // Returns true if the user is currently entering an entity
             var self = this;
             return self.activeEntity != -1;
+        },
+        isLoadedResults: function() {
+            // Returns true if there are loaded results
+            var self = this;
+            return self.loadedResults.length > 0;
         },
 
         renderPattern: function(pattern) {
@@ -577,6 +600,33 @@
                 self.interface.$entityList.slideDown(200);
             } else {
                 self.interface.$entityList.slideUp(200);
+            }
+
+
+            // Should we render the results?
+            if(self.isLoadedResults()) {
+                self.interface.$results.html("");
+                for(var x in self.loadedResults) {
+                    var result = self.loadedResults[x];
+                    
+                    var $result = $("<div />")
+                        .addClass("civomega-result")
+                        .appendTo(self.interface.$results);
+ 
+                    var $title = $("<div />")
+                        .addClass("civomega-result-title")
+                        .html("")
+                        .appendTo($result);
+
+                    var $content = $("<div />")
+                        .addClass("civomega-result-content")
+                        .html(result.html)
+                        .appendTo($result);
+                }
+                self.interface.$results.slideDown(200);
+            } else {
+                self.interface.$results.slideUp(200);
+                self.interface.$results.html("");
             }
 
             // Should we replace the current text?

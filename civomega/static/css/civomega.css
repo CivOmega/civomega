@@ -6,6 +6,12 @@
     outline: 0;
 }
 
+.civomega .civomega-form {
+  width: 632px;
+  height: 100px;
+  margin: auto;
+}
+
 .civomega .civomega-question {
   width: 500px;
   padding: 10px;
@@ -129,4 +135,16 @@
 }
 .civomega li.active .civomega-entity {
   border-bottom: 2px solid white;
+}
+
+.civomega .civomega-results {
+  clear: left;
+}
+
+.civomega .civomega-results .civomega-result {
+  border: 1px solid #D7C9AC;
+  background: #F6EAD2;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 3px;
 }
