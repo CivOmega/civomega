@@ -86,3 +86,6 @@ STATIC_URL = '/static/'
 CIVOMEGA_MODULES = (
     'comod_example',
 )
+
+
+INSTALLED_APPS = INSTALLED_APPS+CIVOMEGA_MODULES

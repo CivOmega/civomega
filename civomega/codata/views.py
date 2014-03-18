@@ -45,7 +45,8 @@ def pattern_match(request):
 def pattern_invoke(request):
     pattern_id = request.GET.get('id', None)
     callback = request.GET.get('callback', None)
-    args = request.GET.get('args', '')
+    args = request.GET.get('args[]', request.GET.get('args', ''))
+    no_html = bool(request.GET.get('no_html', 0))
 
     # TODO:
     # * what do we want results JSON to look like
@@ -61,6 +62,11 @@ def pattern_invoke(request):
       'module_pyname': pattern.module.pymodule,
       'answer_data': answer_data
     }
+
+    if not no_html:
+      html = pattern.module.render_answer_html(answer_data)
+      data['html'] = html
+
     return _return_jsonp(data, callback)
 
 def generic_query(request):
