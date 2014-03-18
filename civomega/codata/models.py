@@ -1,5 +1,15 @@
 # coding=utf-8
 from django.db import models
+import re
+
+CIVOMEGA_VAR = re.compile(r'{.*?}')
+CIVOMEGA_CHARS = re.compile(r'[^a-zA-Z0-9]+')
+
+def pattern_to_autocomplete_str(data):
+    s = CIVOMEGA_VAR.sub('', data)
+    s = CIVOMEGA_CHARS.sub('', s)
+    s = s.replace(" ", "").lower()
+    return s
 
 class DataSource(models.Model):
     """ A datasource, such as an external API. """
@@ -69,8 +79,21 @@ class Module(models.Model):
 
 
 class QuestionPattern(models.Model):
+    """
+    The magic that matches a question being typed by a user to a module that
+    can possibly answer that question.
+
+    `pattern_str` is the madlib string, with variable placeholder:
+        "is {person} a werewolf?"
+
+    `autocomplete_str` is the string, minus variable placeholders (used for
+    autocomplete purposes), spaces, and any non-letter/digit character:
+        "isawerewolf"
+    """
+
     module = models.ForeignKey('codata.Module')
     pattern_str = models.CharField(max_length=200)
+    autocomplete_str = models.CharField(max_length=200)
 
     def answer(self, args):
         # simulate "from MODULENAME import parser" and dynamically load

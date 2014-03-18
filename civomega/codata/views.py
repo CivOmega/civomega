@@ -2,7 +2,7 @@
 from django.http import HttpResponse
 import json
 
-from civomega.codata.models import Module, QuestionPattern
+from civomega.codata.models import Module, QuestionPattern, pattern_to_autocomplete_str
 
 def ask(request):
     return HttpResponse("Sorry, just a stub.", content_type="text/plain")
@@ -27,14 +27,20 @@ def pattern_match(request):
     query = request.GET.get('q', None)
     callback = request.GET.get('callback', None)
 
-    # TODO actually try to narrow
+    #pattern_matches = []
+    #for m in Module.objects.all():
+    #    for p in m.questionpattern_set.all():
+    #        pattern_matches.append({
+    #            'id': p.id,
+    #            'pattern': p.pattern_str
+    #        })
+
     pattern_matches = []
-    for m in Module.objects.all():
-        for p in m.questionpattern_set.all():
-            pattern_matches.append({
-                'id': p.id,
-                'pattern': p.pattern_str
-            })
+    for p in QuestionPattern.objects.filter(autocomplete_str__startswith=pattern_to_autocomplete_str(query)):
+        pattern_matches.append({
+            'id': p.id,
+            'pattern': p.pattern_str
+        })
 
     data = {
       'q': query,
