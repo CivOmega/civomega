@@ -85,6 +85,7 @@ STATIC_URL = '/static/'
 
 CIVOMEGA_MODULES = (
     'comod_example',
+    'comod_sunlightbills',
 )
 
 
