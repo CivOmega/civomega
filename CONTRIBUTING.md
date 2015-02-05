@@ -9,7 +9,7 @@ We're a scrappy band of digital vagabonds, and as such we will be using a cheap 
 
 Since civomega is a small operation, core developers should work directly on the CivOmega/civomega repository and use feature branches for all changes.  Branches should always be named using the `username-feature_description` convention.
 
-Once a branch is ready to combine into the main project, issue a pull request from `your-branch_name` into `develop`.  You can do this using the GitHub interfaces, or if that's to complicated just use the url: https://github.com/CivOmega/civomega/compare/FOO...develop Where `FOO` is the name of the feature branch you want ot merge.
+Once a branch is ready to combine into the main project, issue a pull request from `your-branch_name` into `develop`.  You can do this using the GitHub interfaces, or if that's to complicated just use the url: https://github.com/CivOmega/civomega/compare/FOO...develop Where `FOO` is the name of the feature branch you want to merge.
 
 ## Setting Up
 
