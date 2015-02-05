@@ -338,7 +338,6 @@
                         self.lockPattern(pattern);
                         $(self.interface.$questionSegments.find("input")[0]).val(firstText);
                     } else {
-                        console.log(data.matche)
                         if(data.matches.length == 0)
                             self.patternCache = null;
                         else
@@ -667,12 +666,12 @@
                 });
 
                 // Set the segment container field width to match the content
-                var totalWidth = 0;
+                var totalWidth = 5;
                 self.interface.$questionSegments.children().each( function() {
                     totalWidth += $(this).outerWidth();
                 });
                 self.interface.$questionSegments.width( totalWidth);
-
+                
                 // Ensure that the cursor is never further than "centered"
                 var cursorPosition = getCursorPosition() + 1; // This is called before the cursor is updated
                 var text = $(document.activeElement).val() + self.lastLetter;
