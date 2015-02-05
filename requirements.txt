@@ -7,5 +7,5 @@ requests==2.5.1
 # must be forked to github.com/civomega/ and reviewed and then included
 # here, pointing to a specific commit)
 # -> ALSO UPDATE `CIVOMEGA_MODULES` IN civomega/settings.py
--e git://github.com/CivOmega/civomega-mod-example.git@77ad89aeb22a80418997f8ede3090a6b22b354b9#egg=civomega-mod-example
--e git://github.com/CivOmega/civomega-mod-sunlightbills.git@a16e370d778d5c0e94c1811ec103b40611d768c1#egg=civomega-mod-sunlightbills
+-e git://github.com/CivOmega/civomega-mod-example.git#egg=civomega-mod-example
+-e git://github.com/CivOmega/civomega-mod-sunlightbills.git#egg=civomega-mod-sunlightbills
