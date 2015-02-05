@@ -93,7 +93,6 @@ def migrate():
     run('cd %(path)s/releases/current; ./bin/python manage.py syncdb -v 1 --noinput --settings=civomega.settings_live' % env)
     run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 1 codata --noinput --settings=civomega.settings_live' % env)
     run('cd %(path)s/releases/current; ./bin/python manage.py migrate -v 1 cologger --noinput --settings=civomega.settings_live' % env)
-    run('cd %(path)s/releases/current; ./bin/python manage.py flush --noinput --settings=civomega.settings_live' % env)
     run('cd %(path)s/releases/current; ./bin/python manage.py collectstatic -v1 --noinput --settings=civomega.settings_live' % env)
     run('cd %(path)s/releases/current; ./bin/python manage.py update_patterns --settings=civomega.settings_live' % env)
 

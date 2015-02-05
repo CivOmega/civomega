@@ -8,6 +8,10 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         modules = settings.CIVOMEGA_MODULES
+
+        QuestionPattern.objects.all().delete()
+        Module.objects.all().delete()
+
         for pymodule in modules:
             # Do we have a Module record for this software package?
             # If not, we'll initialize one
