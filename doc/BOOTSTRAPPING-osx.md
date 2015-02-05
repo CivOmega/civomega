@@ -77,8 +77,7 @@ python manage.py syncdb --migrate --noinput
 python manage.py update_patterns
 ```
 
-From here, you should be able to run the local server by running the following
-command…
+From here, you should be able to run the local server.
 
 ```shell
 python manage.py runserver
@@ -101,6 +100,22 @@ commands and then `pip install -r requirements.txt`.
 
 If someone's made an update to a `models.py` file that requires a database
 change, simply do a `python manage.py syncdb --migrate --noinput` once again.
+
+### API keys
+
+The default modules include one which queries the [Sunlight Foundation](http://sunlightfoundation.com)'s
+APIs. So you'll need to have [an API key](http://sunlightfoundation.com/api/)
+if you want to use that one.
+
+Once you have the API key, make sure you do this…
+
+```shell
+export SUNLIGHT_API_KEY=$YOUR_KEY_HERE
+```
+
+…before you run `python manage.py runserver`.
+
+(TODO: Better way to handle this. Make module disable itself at runtime if key is missing.)
 
 ### When installing new modules...
 
