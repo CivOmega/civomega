@@ -43,6 +43,10 @@ venv
 include
 .DS_Store
 man/
+site-packages/
+lib-python/
+lib_pypy
+pip-selfcheck.json
 
 dev_db.sqlite3
 settings_live.py

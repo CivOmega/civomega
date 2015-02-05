@@ -1,7 +1,7 @@
-Django==1.6.3
-South==0.8.4
+Django==1.6.10
+South==1.0.2
 wsgiref==0.1.2
-requests==2.2.1
+requests==2.5.1
 
 # Modules (this is current way we define installed modules. modules
 # must be forked to github.com/civomega/ and reviewed and then included
