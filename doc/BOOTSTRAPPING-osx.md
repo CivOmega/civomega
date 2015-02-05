@@ -4,6 +4,9 @@
 
 ### First-time setup
 
+**Install Homebrew if you don't have it**
+
+Homebrew needs some tools from Xcode.
 Install the Xcode compilers if you don't have a real copy of the
 [Xcode app](https://itunes.apple.com/us/app/xcode/id497799835). If you do
 have Xcode, then skip ths command.
@@ -19,6 +22,8 @@ even if you do have brew installed, it'll just warn you about it. Don't do the
 ```shell
 ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 ```
+
+**Set up an up-to-date Python environment, using Homebrew**
 
 Make sure Homebrew is up to date (so it knows about the latest software
 packages) and then install Python. It will take a while to build Python.
@@ -39,7 +44,9 @@ Python environment. (You may need to `sudo` this command.)
 /usr/local/bin/pip install -UI setuptools pip virtualenv
 ```
 
-Pick a place to store the repo. I usually put projects in a `Code` directory
+**Download and initialize a CivOmega instance**
+
+Pick a place to store the CivOmega code. I usually put projects in a `Code` directory
 in my home folder, but you can adjust this accordingly. `cd` into that
 directory.
 
@@ -67,6 +74,7 @@ database by default. You can initialize the database by doing:
 
 ```shell
 python manage.py syncdb --migrate --noinput
+python manage.py update_patterns
 ```
 
 From here, you should be able to run the local server by running the following
@@ -93,3 +101,10 @@ commands and then `pip install -r requirements.txt`.
 
 If someone's made an update to a `models.py` file that requires a database
 change, simply do a `python manage.py syncdb --migrate --noinput` once again.
+
+### When installing new modules...
+
+When you edit a module's code, you'll want to run `python manage.py update_patterns`
+again so that the database knows about any new question/answer patterns your
+code has. (If you don't do this, your module probably won't show up when you
+type in a question in the CivOmega web interface!)
