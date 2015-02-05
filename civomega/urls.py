@@ -3,6 +3,8 @@ from django.views.generic import TemplateView
 
 urlpatterns = patterns('',
     url(r'^$', TemplateView.as_view(template_name="index.html"), name='homepage'),
+    url(r'^about$', TemplateView.as_view(template_name="about.html"), name='about'),
+    url(r'^developers$', TemplateView.as_view(template_name="developers.html"), name='developers'),
     url(r'^ask$', 'civomega.codata.views.ask', name='ask'),
 
     url(r'^endpoints/pattern-match$', 'civomega.codata.views.pattern_match',
