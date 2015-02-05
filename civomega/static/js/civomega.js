@@ -338,7 +338,11 @@
                         self.lockPattern(pattern);
                         $(self.interface.$questionSegments.find("input")[0]).val(firstText);
                     } else {
-                        self.patternCache = data.matches;
+                        console.log(data.matche)
+                        if(data.matches.length == 0)
+                            self.patternCache = null;
+                        else
+                            self.patternCache = data.matches;
                         self.activeAjax = null;
                         self.redraw();
                     }
