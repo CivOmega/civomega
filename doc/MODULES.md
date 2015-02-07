@@ -3,9 +3,9 @@ CivOmega Modules are what connect datasets and APIs to question patterns.  To cr
 
 Modules have the following components:
 
-- [parsers.py](https://github.com/CivOmega/civomega-mod-bootstrap/comod_example/parser.py) - this is where you define question routes and answer logic
-- [patterns.py](https://github.com/CivOmega/civomega-mod-bootstrap/comod_example/patterns.py) - this is where you define the list of question patterns that your module knows how to answer
-- [templates](https://github.com/CivOmega/civomega-mod-bootstrap/comod_example/templates) - this is where you define the output format for your answers
+- [parsers.py](https://github.com/CivOmega/civomega-mod-bootstrap/comod_bootstrap/parser.py) - this is where you define question routes and answer logic
+- [patterns.py](https://github.com/CivOmega/civomega-mod-bootstrap/comod_bootstrap/patterns.py) - this is where you define the list of question patterns that your module knows how to answer
+- [templates](https://github.com/CivOmega/civomega-mod-bootstrap/comod_bootstrap/templates) - this is where you define the output format for your answers
 
 ### Step 1: Fork, Clone, and Configure
 
