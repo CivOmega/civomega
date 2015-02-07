@@ -2,7 +2,7 @@
 Default Theme
 *************/
 /* overall */
-.tablesorter-default {
+.tablesorter {
 	width: 100%;
 	font: 14px "Lato";
 	color: #333;
@@ -13,8 +13,8 @@ Default Theme
 }
 
 /* header */
-.tablesorter-default th,
-.tablesorter-default thead td {
+.tablesorter th,
+.tablesorter thead td {
 	font: bold 14px "Lato";
 	color: #000;
 	/* background-color: #fff; */
@@ -22,12 +22,12 @@ Default Theme
 	border-bottom: #ccc 2px solid;
 	padding: 0;
 }
-.tablesorter-default tfoot th,
-.tablesorter-default tfoot td {
+.tablesorter tfoot th,
+.tablesorter tfoot td {
 	border: 0;
 }
-.tablesorter-default .header,
-.tablesorter-default .tablesorter-header {
+.tablesorter .header,
+.tablesorter .tablesorter-header {
 	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
 	background-position: center right;
 	background-repeat: no-repeat;
@@ -35,31 +35,31 @@ Default Theme
 	white-space: normal;
 	padding: 4px 20px 4px 4px;
 }
-.tablesorter-default thead .headerSortUp,
-.tablesorter-default thead .tablesorter-headerSortUp,
-.tablesorter-default thead .tablesorter-headerAsc {
+.tablesorter thead .headerSortUp,
+.tablesorter thead .tablesorter-headerSortUp,
+.tablesorter thead .tablesorter-headerAsc {
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
 }
-.tablesorter-default thead .headerSortDown,
-.tablesorter-default thead .tablesorter-headerSortDown,
-.tablesorter-default thead .tablesorter-headerDesc {
+.tablesorter thead .headerSortDown,
+.tablesorter thead .tablesorter-headerSortDown,
+.tablesorter thead .tablesorter-headerDesc {
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 }
-.tablesorter-default thead .sorter-false {
+.tablesorter thead .sorter-false {
 	background-image: none;
 	padding: 4px;
 }
 
 /* tfoot */
-.tablesorter-default tfoot .tablesorter-headerSortUp,
-.tablesorter-default tfoot .tablesorter-headerSortDown,
-.tablesorter-default tfoot .tablesorter-headerAsc,
-.tablesorter-default tfoot .tablesorter-headerDesc {
+.tablesorter tfoot .tablesorter-headerSortUp,
+.tablesorter tfoot .tablesorter-headerSortDown,
+.tablesorter tfoot .tablesorter-headerAsc,
+.tablesorter tfoot .tablesorter-headerDesc {
 	border-top: #000 2px solid;
 }
 
 /* tbody */
-.tablesorter-default td {
+.tablesorter td {
 	/* background-color: #fff;  */
 	border-bottom: #ccc 1px solid;
 	padding: 4px;
@@ -67,15 +67,15 @@ Default Theme
 }
 
 /* hovered row colors */
-.tablesorter-default tbody > tr:hover > td,
-.tablesorter-default tbody > tr.even:hover > td,
-.tablesorter-default tbody > tr.odd:hover > td {
+.tablesorter tbody > tr:hover > td,
+.tablesorter tbody > tr.even:hover > td,
+.tablesorter tbody > tr.odd:hover > td {
 	background: #eed6a8;
 	color: #000;
 }
 
 /* table processing indicator */
-.tablesorter-default .tablesorter-processing {
+.tablesorter .tablesorter-processing {
 	background-position: center center !important;
 	background-repeat: no-repeat !important;
 	/* background-image: url(../addons/pager/icons/loading.gif) !important; */
@@ -83,33 +83,33 @@ Default Theme
 }
 
 /* Zebra Widget - row alternating colors */
-.tablesorter-default tr.odd td {
+.tablesorter tr.odd td {
 	background-color: #dfdfdf;
 }
-.tablesorter-default tr.even td {
+.tablesorter tr.even td {
 	background-color: #efefef;
 }
 
 /* Column Widget - column sort colors */
-.tablesorter-default tr.odd td.primary {
+.tablesorter tr.odd td.primary {
 	background-color: #bfbfbf;
 }
-.tablesorter-default td.primary,
-.tablesorter-default tr.even td.primary {
+.tablesorter td.primary,
+.tablesorter tr.even td.primary {
 	background-color: #d9d9d9;
 }
-.tablesorter-default tr.odd td.secondary {
+.tablesorter tr.odd td.secondary {
 	background-color: #d9d9d9;
 }
-.tablesorter-default td.secondary,
-.tablesorter-default tr.even td.secondary {
+.tablesorter td.secondary,
+.tablesorter tr.even td.secondary {
 	background-color: #e6e6e6;
 }
-.tablesorter-default tr.odd td.tertiary {
+.tablesorter tr.odd td.tertiary {
 	background-color: #e6e6e6;
 }
-.tablesorter-default td.tertiary,
-.tablesorter-default tr.even td.tertiary {
+.tablesorter td.tertiary,
+.tablesorter tr.even td.tertiary {
 	background-color: #f2f2f2;
 }
 
@@ -119,24 +119,24 @@ caption {
 }
 
 /* filter widget */
-.tablesorter-default .tablesorter-filter-row td {
+.tablesorter .tablesorter-filter-row td {
 	background: #eee;
 	border-bottom: #ccc 1px solid;
 	line-height: normal;
-	text-align: center; /* center the input */
+	text-align: left; /* center the input */
 	-webkit-transition: line-height 0.1s ease;
 	-moz-transition: line-height 0.1s ease;
 	-o-transition: line-height 0.1s ease;
 	transition: line-height 0.1s ease;
 }
 /* optional disabled input styling */
-.tablesorter-default .tablesorter-filter-row .disabled {
+.tablesorter .tablesorter-filter-row .disabled {
 	opacity: 0.5;
 	filter: alpha(opacity=50);
 	cursor: not-allowed;
 }
 /* hidden filter row */
-.tablesorter-default .tablesorter-filter-row.hideme td {
+.tablesorter .tablesorter-filter-row.hideme td {
 	/*** *********************************************** ***/
 	/*** change this padding to modify the thickness     ***/
 	/*** of the closed filter row (height = padding x 2) ***/
@@ -146,7 +146,7 @@ caption {
 	line-height: 0;
 	cursor: pointer;
 }
-.tablesorter-default .tablesorter-filter-row.hideme .tablesorter-filter {
+.tablesorter .tablesorter-filter-row.hideme .tablesorter-filter {
 	height: 1px;
 	min-height: 0;
 	border: 0;
@@ -157,7 +157,7 @@ caption {
 	filter: alpha(opacity=0);
 }
 /* filters */
-.tablesorter-default .tablesorter-filter {
+.tablesorter .tablesorter-filter {
 	width: 95%;
 	height: auto;
 	margin: 4px;
