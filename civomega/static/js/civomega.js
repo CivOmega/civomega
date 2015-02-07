@@ -335,22 +335,12 @@
                     }
                 })
                 .done(function( data ) {
-                    // If there used to be a match, but there isn't any longer...
-                    if(data.matches.length == 0 && self.isPatternSelected()) {
-                        var pattern = self.patternCache[self.highlightedIndex];
-                        var currentText = self.interface.$questionInputBase.val();
-                        var patternStem = pattern.pattern.replace(/\{.*/, "");
-                        var firstText = currentText.substring(patternStem.length);
-                        self.lockPattern(pattern);
-                        $(self.interface.$questionSegments.find("input")[0]).val(firstText);
-                    } else {
-                        if(data.matches.length == 0)
-                            self.patternCache = [];
-                        else
-                            self.patternCache = data.matches;
-                        self.activeAjax = null;
-                        self.redraw();
-                    }
+                    if(data.matches.length == 0)
+                        self.patternCache = [];
+                    else
+                        self.patternCache = data.matches;
+                    self.activeAjax = null;
+                    self.redraw();
 
                     // Update (or reset) selected match
                     if(data.matches.length == 0)

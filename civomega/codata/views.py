@@ -36,7 +36,12 @@ def pattern_match(request):
     #        })
 
     pattern_matches = []
-    for p in QuestionPattern.objects.filter(autocomplete_str__startswith=pattern_to_autocomplete_str(query)):
+
+    questions = QuestionPattern.objects.filter(autocomplete_str__startswith=pattern_to_autocomplete_str(query))
+    if questions.count() == 0:
+        questions = QuestionPattern.objects.filter(autocomplete_str__contains=pattern_to_autocomplete_str(query))
+    
+    for p in questions:
         pattern_matches.append({
             'id': p.id,
             'pattern': p.pattern_str
