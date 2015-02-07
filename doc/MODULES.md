@@ -75,8 +75,6 @@ python manage.py runserver
 
 ### Step 3: Parsing Question Input
 
-[TODO]
-
 `parsers.py`: `answer_pattern(pattern, args)`, `render_answer_html(answer_data)`, `render_answer_json(answer_data)` are required, but you can define more functions as you need them.
 
 
@@ -107,5 +105,7 @@ If you need to use other Python libraries inside your module you can add them to
 Because you've set up `civomega` to run your module "live" from the code directory you're editing (instead of installing it from the internet), you'll have to `pip install requests` (or whatever library you wanted to add) -- as long as you're in a terminal that you've "activated" (i.e. you've done `source bin/activate` in the `civomega` directory first).
 
 ### Step 4: Rendering ourput
+
+[TODO]
 
 HTML files in `comod_example/templates/comod_example/`
