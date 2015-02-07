@@ -102,13 +102,6 @@
                 .appendTo($question);
             self.interface.$questionInputBase = $questionInputBase;
 
-            // The visual indicator for ajax requests (e.g. spinny wheel)
-            var $ajaxStatus = $("<div>")
-                .addClass("civomega-ajax-status")
-                .hide()
-                .appendTo($form);
-            self.interface.$ajaxStatus = $ajaxStatus;
-
             // The list of patterns returned from the server
             var $patternList = $("<ul>")
                 .addClass("civomega-patternlist")
@@ -122,6 +115,14 @@
                 .hide()
                 .appendTo($form);
             self.interface.$entityList = $entityList;
+
+            // The visual indicator for ajax requests (e.g. spinny wheel)
+            var $ajaxStatus = $("<div>")
+                .addClass("civomega-ajax-status")
+                .html("Loading...")
+                .hide()
+                .appendTo($el);
+            self.interface.$ajaxStatus = $ajaxStatus;
 
             // The results pane
             var $results = $("<div>")
@@ -138,6 +139,7 @@
             })
             .done(function( data ) {
                 self.typeCache = data.types;
+                self.activeAjax = null;
                 self.redraw();
             });
 
@@ -164,7 +166,8 @@
                         self.highlightedIndex = -1;
                         self.redraw();
                     } else {
-                        if(getCursorPosition() == 0) {
+                        var entities = self.interface.$questionSegments.find("input");
+                        if(getCursorPosition() == 0 && $(entities[self.activeEntity]).val() == "") {
                             if (self.activeEntity == 0) {
                                 self.cancelPattern();
                                 self.redraw();
@@ -374,6 +377,7 @@
 
             // Create inputs for each entity
             var totalWidth = 0;
+            var inputIndex = 0;
             for(var x in self.patternSegments) {
                 var segment = self.patternSegments[x];
                 if(segment.type == "text") {
@@ -392,12 +396,17 @@
 
                     var $segmentElementQuestion = $("<input>")
                         .attr("type","text")
+                        .data("inputIndex", inputIndex)
                         .addClass("civomega-question-input")
                         .keydown(function(e) {
                             return self.processKeydown(e);
                         })
                         .keyup(function(e) {
                             return self.processKeyup(e);
+                        })
+                        .focus(function() {
+                            // If the user clicks or tabs, we need to update the plugin state
+                            self.activeEntity = $(this).data("inputIndex");
                         })
                         .appendTo($segmentElement);
 
@@ -406,6 +415,7 @@
                         .text(segment.value.display_name)
                         .appendTo($segmentElement);
                     self.interface.questionSegments[x] = $segmentElement;
+                    ++inputIndex;
                 }
                 self.interface.$questionSegments.width(totalWidth);
             }
@@ -423,7 +433,7 @@
                     values.push($(entity).val());
                 });
 
-                $.ajax({
+                self.activeAjax = $.ajax({
                     method: "GET",
                     url: self.options.submitUrl,
                     dataType: "json",
@@ -434,12 +444,15 @@
                 })
                 .done(function( data ) {
                     self.loadedResults = [data];
+                    self.activeAjax = null;
                     self.redraw();
                 })
                 .error(function() {
-                    self.loadedResults = ["Something went wrong."];
+                    self.loadedResults = [{'html': '<p>Uh oh! Something went wrong with your request.</p>'}];
+                    self.activeAjax = null;                    
                     self.redraw();
                 });
+                self.redraw();
             }
         },
 
@@ -597,7 +610,12 @@
 
             // Should we render the AJAX loader?
             if(self.isActiveAjax()) {
-                self.interface.$ajaxStatus.show();
+                // Only render if this request lasts longer than half a second
+                var cache = self.activeAjax;
+                setTimeout(function() {
+                    if(self.activeAjax == cache)
+                        self.interface.$ajaxStatus.fadeIn(200);
+                }, 500)
             } else {
                 self.interface.$ajaxStatus.hide();
             }
@@ -660,7 +678,11 @@
             if(self.isPatternList()) {
                 self.$el.addClass("patternList");
             } else {
-                self.$el.removeClass("patternList");
+                // We have to wait for the pattern list to disapper first
+                setTimeout(function() {
+                    if(!self.isPatternList())
+                        self.$el.removeClass("patternList");
+                }, 200);
             }
         },
 
