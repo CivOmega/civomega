@@ -291,6 +291,7 @@
             self.lastLetter = "";
             switch(e.keyCode) {
                 case 8: // delete
+                    self.redraw();
                     break;
                 case 13: // enter
                     break;
@@ -493,7 +494,7 @@
         isPatternList: function() {
             // Returns true if the user has a pattern cache but hasn't picked a pattern
             var self = this;
-            return !self.isPatternLocked() && self.patternCache != null;
+            return !self.isPatternLocked() && self.patternCache != null && self.interface.$questionInputBase.val() != "";
         },
 
         isActiveAjax: function() {
@@ -705,7 +706,7 @@
 
             self.interface.$patternList.empty();
 
-            // Are there matching patterns?
+            // Are there any potential matching patterns?
             if(self.patternCache.length == 0 ) {
                 var $li = $("<li>")
                     .html("Sorry, please try another question.")
