@@ -115,7 +115,13 @@ export SUNLIGHT_API_KEY=$YOUR_KEY_HERE
 
 …before you run `python manage.py runserver`.
 
-(TODO: Better way to handle this. Make module disable itself at runtime if key is missing.)
+If you still get a 500 error when trying to ask a question against the Sunlight API (check your terminal), try doing this…
+
+```shell
+pip install pyopenssl ndg-httpsclient pyasn1
+```
+
+…and then try running the server again.
 
 ### When installing new modules...
 
