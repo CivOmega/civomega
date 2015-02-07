@@ -154,8 +154,10 @@
             self.lastLetter = (self.lastLetter.match(/[a-zA-Z.,?0-9]/)?self.lastLetter:"");
             if(e.keyCode == 32) self.lastLetter = " "; // "space" is the only whitespace we care about
 
-            switch(e.keyCode) {
+            // Wipe out any results (the user just changed them)
+            self.loadedResults = [];
 
+            switch(e.keyCode) {
                 case 8: // delete
                     // If we are in the pattern list, delete unhighlights the currently highlighted pattern
                     if(self.isPatternList()) {
@@ -525,7 +527,7 @@
                     var typeCode = item.substring(1,item.length-1);
 
                     var type = {
-                        "display_name": typeCode,
+                        "display_name": typeCode.replace("_"," "),
                         "validation": "/(.)*/",
                         "description": ""
                     }
@@ -556,7 +558,7 @@
 
                     var type = {
                         code: typeCode,
-                        display_name: typeCode,
+                        display_name: typeCode.replace("_"," "),
                         validation: "/(.)*/",
                         description: ""
                     }
