@@ -11,7 +11,7 @@ Modules have the following components:
 
 To build a module you first need to create a working version of [CivOmega](https://github.com/CivOmega/civomega) set up on your development environment.  Once this is done:
 
-* Fork the [CivOmega Module Boilerplate](https://github.com/CivOmega/civomega-mod-bootstrap) repository in GitHub. (It's the big button in the upper-right of the page.)
+* Fork the [CivOmega Module Bootstrap](https://github.com/CivOmega/civomega-mod-bootstrap) repository in GitHub. (It's the big button in the upper-right of the page.)
 * In your GitHub fork, go to the settings and rename it from `civomega-mod-bootstrap` to `civomega-mod-meaningful-name` (or whatever you'd like to call your module)
 * Clone your fork alongside wherever you cloned CivOmega. (If you have `civomega` checked out as `$HOME/Projects/civomega`, clone it from `$HOME/Projects` so you end up with `$HOME/Projects/civomega-mod-meaningful-name` or etc.)
 
