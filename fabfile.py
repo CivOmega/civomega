@@ -16,7 +16,7 @@ def setup():
     """
     require('hosts')
     require('path')
-    sudo('aptitude install -y nginx python-setuptools postgresql-client libpq-dev python-dev uwsgi uwsgi-plugin-python')
+    sudo('aptitude install -y nginx python-setuptools postgresql-client libpq-dev python-dev uwsgi uwsgi-plugin-python libffi-dev')
     sudo('easy_install -q pip')
     sudo('pip install -q virtualenv')
 
@@ -82,7 +82,7 @@ def upload_tar_from_git():
 def bootstrap_venv():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s/releases/%(release)s; virtualenv .; ./bin/pip install -UIq pip setuptools; ./bin/pip install -UI psycopg2; ./bin/pip install -UI -r requirements.txt' % env)
+    run('cd %(path)s/releases/%(release)s; virtualenv .; ./bin/pip install -UIq pip setuptools; ./bin/pip install -UI psycopg2 pyopenssl ndg-httpsclient pyasn1; ./bin/pip install -UI -r requirements.txt' % env)
 def symlink_current_release():
     "Symlink our current release"
     require('release', provided_by=[deploy, setup])
