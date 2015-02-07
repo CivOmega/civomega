@@ -15,7 +15,7 @@ You are going to need [Python](https://www.python.org/downloads/) and [Git](http
 
 
 ## Contributing
-If you are a developer interested in contributing a question module, start by taking a look at our [CivOmega Module Documentation](doc/modules.md).  Once you are happy with your module, [raise an issue](https://github.com/CivOmega/civomega/issue) explaining your module, and requesting that it be added to [CivOmega](http://civomega.com).  We will then review the module and respond with any feedback.
+If you are a developer interested in contributing a question module, start by taking a look at our [CivOmega Module Documentation](doc/MODULES.md).  Once you are happy with your module, [raise an issue](https://github.com/CivOmega/civomega/issue) explaining your module, and requesting that it be added to [CivOmega](http://civomega.com).  We will then review the module and respond with any feedback.
 
 If you are a developer interested in contributing to CivOmega Core, there is a small amount of developer-specific documentation available related to the core project. See [CONTRIBUTING.md](CONTRIBUTING.md) and the files in the [doc directory](doc).
 
