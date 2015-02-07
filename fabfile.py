@@ -82,7 +82,7 @@ def upload_tar_from_git():
 def bootstrap_venv():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s/releases/%(release)s; virtualenv -q .; ./bin/pip install -q -M --download-cache %(path)s/packages psycopg2; ./bin/pip install -q -M --download-cache %(path)s/packages -r requirements.txt' % env)
+    run('cd %(path)s/releases/%(release)s; virtualenv -q .; ./bin/pip install -UIq pip setuptools; ./bin/pip install -qUI psycopg2; ./bin/pip install -qUI -r requirements.txt' % env)
 def symlink_current_release():
     "Symlink our current release"
     require('release', provided_by=[deploy, setup])
