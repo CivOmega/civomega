@@ -341,7 +341,7 @@
                         $(self.interface.$questionSegments.find("input")[0]).val(firstText);
                     } else {
                         if(data.matches.length == 0)
-                            self.patternCache = null;
+                            self.patternCache = [];
                         else
                             self.patternCache = data.matches;
                         self.activeAjax = null;
@@ -434,6 +434,10 @@
                 .done(function( data ) {
                     self.loadedResults = [data];
                     self.redraw();
+                })
+                .error(function() {
+                    self.loadedResults = ["Something went wrong."];
+                    self.redraw();
                 });
             }
         },
@@ -490,6 +494,12 @@
             // Returns true if the user has a pattern cache but hasn't picked a pattern
             var self = this;
             return !self.isPatternLocked() && self.patternCache != null;
+        },
+
+        isActiveAjax: function() {
+            // Returns true if there is an active ajax call
+            var self = this;
+            return self.activeAjax != null;
         },
 
         isPatternLocked: function() {
@@ -585,7 +595,7 @@
             var self = this;
 
             // Should we render the AJAX loader?
-            if(self.activeAjax) {
+            if(self.isActiveAjax()) {
                 self.interface.$ajaxStatus.show();
             } else {
                 self.interface.$ajaxStatus.hide();
@@ -593,7 +603,7 @@
 
             // Should we render the pattern autocomplete?
             if(self.isPatternList()) {
-                self.redraw_patterns();
+                self.redrawPatterns();
                 self.interface.$patternList.slideDown(200);
             } else {
                 self.interface.$patternList.slideUp(200);
@@ -601,7 +611,7 @@
 
             // Should we render the entity autocomplete?
             if(self.isEntityList()) {
-                self.redraw_entities();
+                self.redrawEntities();
                 self.interface.$entityList.slideDown(200);
             } else {
                 self.interface.$entityList.slideUp(200);
@@ -638,7 +648,7 @@
             if(self.isPatternLocked()) {
                 self.interface.$questionInputBase.hide();
                 self.interface.$questionSegments.show();
-                self.redraw_question();
+                self.redrawQuestion();
             } else {
                 self.interface.$questionSegments.hide();
                 self.interface.$questionInputBase.show();
@@ -653,7 +663,7 @@
             }
         },
 
-        redraw_question: function() {
+        redrawQuestion: function() {
             var self = this;
             if(self.isPatternLocked()) {
                 // Set the input field widths to match their content
@@ -689,37 +699,46 @@
             }
         },
 
-        redraw_patterns: function() {
+        redrawPatterns: function() {
             // We want to re-render the pattern list
             var self = this;
 
             self.interface.$patternList.empty();
-            for(var x in self.patternCache) {
-                var pattern = self.patternCache[x];
 
+            // Are there matching patterns?
+            if(self.patternCache.length == 0 ) {
                 var $li = $("<li>")
-                    .html(self.renderPattern(pattern))
-                    .data("civomega-pattern", pattern)
-                    .click(function() {
-                        // The user wants to lock into this question
-                        self.lockPattern($(this).data("civomega-pattern"));
-                        self.redraw();
-                    })
-                    .mouseenter(function() {
-                        // If the mouse entered an unihlighted item, highlight it
-                        var index = $(this).index();
-                        if(self.highlightedIndex != index) {
-                            self.highlightedIndex = index;
-                            self.redraw();
-                        }
-                    })
+                    .html("Sorry, please try another question.")
                     .appendTo(self.interface.$patternList);
-                if(x == self.highlightedIndex)
-                    $li.addClass("active");
+            }
+            else {
+                for(var x in self.patternCache) {
+                    var pattern = self.patternCache[x];
+
+                    var $li = $("<li>")
+                        .html(self.renderPattern(pattern))
+                        .data("civomega-pattern", pattern)
+                        .click(function() {
+                            // The user wants to lock into this question
+                            self.lockPattern($(this).data("civomega-pattern"));
+                            self.redraw();
+                        })
+                        .mouseenter(function() {
+                            // If the mouse entered an unihlighted item, highlight it
+                            var index = $(this).index();
+                            if(self.highlightedIndex != index) {
+                                self.highlightedIndex = index;
+                                self.redraw();
+                            }
+                        })
+                        .appendTo(self.interface.$patternList);
+                    if(x == self.highlightedIndex)
+                        $li.addClass("active");
+                }
             }
         },
 
-        redraw_entities: function() {
+        redrawEntities: function() {
             // We want to re-render the entity list
             var self = this;
         }

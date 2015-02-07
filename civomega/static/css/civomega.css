@@ -148,3 +148,9 @@
   padding: 10px;
   border-radius: 3px;
 }
+
+.civomega .civomega-ajax-status {
+  height: 20px;
+  width: 20px;
+  background: url("http://rpg.drivethrustuff.com/shared_images/ajax-loader.gif");
+}
