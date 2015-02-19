@@ -10,6 +10,10 @@ p {
 	margin: 10px;
 }
 
+#everything {
+	min-width: 700px;
+}
+
 .logo {
 	text-indent: -9000px;
 	background: url("../img/logo.png");

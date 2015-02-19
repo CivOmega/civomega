@@ -21,21 +21,23 @@
   <script type="text/javascript" src="{% static 'js/jquery.tablesorter.min.js' %}"></script>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1 class="logo2"><a href="{% url 'homepage' %}"><img src="{% static 'img/logo.png' %}" alt="CivOmega" title="CivOmega"/></a></h1>
+  <div id="everything">
+    <header>
+      <div class="container">
+        <h1 class="logo2"><a href="{% url 'homepage' %}"><img src="{% static 'img/logo.png' %}" alt="CivOmega" title="CivOmega"/></a></h1>
+      </div>
+    </header>
+    <div class="airlock">
+      <div id="page" class="container">
+          {% block content %}{% endblock %}
+      </div>
     </div>
-  </header>
-  <div class="airlock">
-    <div id="page" class="container">
-        {% block content %}{% endblock %}
-    </div>
+    <hr />
+    <footer style="font-size: 14px; ">
+      <div class="container">
+      <p><a href="https://github.com/CivOmega/civomega">Source</a> | <a href="/about">About</a> | <a href="/developers">Developers</a> | Sponsored by <img style="height:2em" src="{% static 'img/sunlight.png' %}"  class="sunlight-logo"/></p>
+      </div>
+    </footer>
   </div>
-  <hr />
-  <footer style="font-size: 14px; ">
-    <div class="container">
-    <p><a href="https://github.com/CivOmega/civomega">Source</a> | <a href="/about">About</a> | <a href="/developers">Developers</a> | Sponsored by <img style="height:2em" src="{% static 'img/sunlight.png' %}"  class="sunlight-logo"/></p>
-    </div>
-  </footer>
 </body>
 </html>
