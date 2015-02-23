@@ -9,3 +9,4 @@ requests==2.5.1
 # -> ALSO UPDATE `CIVOMEGA_MODULES` IN civomega/settings.py
 -e git://github.com/CivOmega/civomega-mod-example.git@master#egg=civomega-mod-example
 -e git://github.com/CivOmega/civomega-mod-sunlightbills.git@master#egg=civomega-mod-sunlightbills
+-e git://github.com/CivOmega/civomega-mod-fda.git@master#egg=civomega-mod-fda

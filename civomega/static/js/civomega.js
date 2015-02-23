@@ -156,11 +156,11 @@
             self.lastLetter = (self.lastLetter.match(/[a-zA-Z.,?0-9]/)?self.lastLetter:"");
             if(e.keyCode == 32) self.lastLetter = " "; // "space" is the only whitespace we care about
 
-            // Wipe out any results (the user just changed them)
-            self.loadedResults = [];
-
             switch(e.keyCode) {
                 case 8: // delete
+                    // Wipe out any results (the user just changed them)
+                    self.loadedResults = [];
+
                     // If we are in the pattern list, delete unhighlights the currently highlighted pattern
                     if(self.isPatternList()) {
                         self.highlightedIndex = -1;
