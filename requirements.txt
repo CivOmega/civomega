@@ -10,3 +10,4 @@ requests==2.5.1
 -e git://github.com/CivOmega/civomega-mod-example.git@master#egg=civomega-mod-example
 -e git://github.com/CivOmega/civomega-mod-sunlightbills.git@master#egg=civomega-mod-sunlightbills
 -e git://github.com/CivOmega/civomega-mod-fda.git@master#egg=civomega-mod-fda
+-e git://github.com/CivOmega/civomega-mod-dol.git@master#egg=civomega-mod-dol

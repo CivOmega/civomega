@@ -87,6 +87,7 @@ CIVOMEGA_MODULES = (
     'comod_example',
     'comod_sunlightbills',
     'comod_fda',
+    'comod_dol',
     # your modules here:
 )
 
