@@ -76,7 +76,7 @@
                 .attr("type","submit")
                 .val("Ask!")
                 .click(function(e) {
-                    self.submit();
+                    self.submit(true);
                 })
                 .appendTo($form);
             self.interface.$submitButton = $submitButton;
@@ -145,6 +145,43 @@
 
             // Load in our dynamic css
             $('head').append('<link rel="stylesheet" href="' + self.options.styleUrl + '" type="text/css" />');
+
+            // Check URL for parameters
+            var pattern = getParameterByName("q");
+            var args = getParameterByName("a");
+
+            if(pattern) {
+                if(args)
+                    args = args.split("|");
+                else
+                    args = [];
+
+                self.activeAjax = $.ajax({
+                    method: "GET",
+                    url: self.options.patternUrl,
+                    dataType: "json",
+                    data: {
+                        q: pattern
+                    }
+                })
+                .done(function( data ) {
+                    if(data.matches.length == 0)
+                        return;
+
+                    self.patternCache = data.matches;
+                    self.highlightedIndex = 0;
+                    self.activeAjax = null;
+                    self.lockPattern(self.patternCache[self.highlightedIndex]);
+                    self.redraw();
+                    for(var x in args) {
+                        self.populateEntity(x,args[x]);
+                    }
+                    self.redraw();
+                    self.submit();
+                })
+            }
+
+
         },
 
         processKeydown: function(e) {
@@ -197,7 +234,7 @@
 
                     if(self.isPatternLocked()) {
                         if(self.isLastEntity()) {
-                            self.submit();
+                            self.submit(true);
                         }
                         else {
                             self.nextEntity();
@@ -413,15 +450,23 @@
             self.refocus = true;
         },
 
-        submit: function() {
+        submit: function(isUpdate) {
             var self = this;
             if(self.isPatternLocked()) {
                 var pattern = self.lockedPattern;
                 var entities = self.interface.$questionSegments.find("input");
                 var values = [];
                 $(entities).each(function(i, entity) {
-                    values.push($(entity).val());
+                    values.push($(entity).val().replace("|"," "));
                 });
+
+                if(isUpdate) {
+                    // Should we update the window location state?
+                    var u = window.location.href;
+                    u = getQueryString("a", values.join("|"), u);
+                    u = getQueryString("q", self.lockedPattern.pattern, u);
+                    window.history.pushState("", "", u)
+                }
 
                 self.activeAjax = $.ajax({
                     method: "GET",
@@ -457,6 +502,13 @@
             var entities = self.interface.$questionSegments.find("input");
             self.activeEntity = Math.min(entities.length - 1, self.activeEntity + 1);
             self.refocus = true;
+        },
+
+        populateEntity: function(index, value) {
+            // Undo the current pattern
+            var self = this;
+            var inputs = self.interface.$questionSegments.find("input");
+            $(inputs[index]).val(value);
         },
 
         previousEntity: function() {
@@ -797,6 +849,44 @@
         width = $temp.width();
         $temp.remove();
         return width;
+    }
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    function getQueryString(key, value, url) {
+        // grabbed from http://stackoverflow.com/questions/5999118/add-or-update-query-string-parameter
+        if (!url) url = window.location.href;
+        var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi"),
+            hash;
+
+        if (re.test(url)) {
+            if (typeof value !== 'undefined' && value !== null)
+                return url.replace(re, '$1' + key + "=" + value + '$2$3');
+            else {
+                hash = url.split('#');
+                url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
+                if (typeof hash[1] !== 'undefined' && hash[1] !== null) 
+                    url += '#' + hash[1];
+                return url;
+            }
+        }
+        else {
+            if (typeof value !== 'undefined' && value !== null) {
+                var separator = url.indexOf('?') !== -1 ? '&' : '?';
+                hash = url.split('#');
+                url = hash[0] + separator + key + '=' + value;
+                if (typeof hash[1] !== 'undefined' && hash[1] !== null) 
+                    url += '#' + hash[1];
+                return url;
+            }
+            else
+                return url;
+        }
     }
 
 })( jQuery, window, document );
